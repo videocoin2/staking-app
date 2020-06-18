@@ -2,6 +2,7 @@ import React, {
   ChangeEvent,
   ReactNode,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -37,7 +38,8 @@ enum Modal {
   staking,
   unstaking,
   error,
-  success,
+  successUnstaking,
+  successStaking,
 }
 
 const WorkerPage = () => {
@@ -65,15 +67,10 @@ const WorkerPage = () => {
     const { value } = e.target;
     setStake((+value as unknown) as StakeType);
   };
-
-  const justTransfer = useCallback(
-    (overrides: any) => {
-      escrow
-        .transfer(address, amount, overrides)
-        .then((transaction: TransactionResponse) => {
-          localStorage.setItem(TRANSACTION_KEY, transaction.hash);
-          return library.waitForTransaction(transaction.hash);
-        })
+  useEffect(() => {
+    if (localStorage.getItem(TRANSACTION_KEY)) {
+      library
+        .waitForTransaction(localStorage.getItem(TRANSACTION_KEY))
         .then((receipt: TransactionReceipt) => {
           if (receipt.status === 0) {
             throw new Error(`Transaction ${receipt.transactionHash} failed`);
@@ -82,6 +79,33 @@ const WorkerPage = () => {
         })
         .catch(() => {
           localStorage.removeItem(TRANSACTION_KEY);
+        });
+    }
+  }, [library]);
+
+  const prepareStake = () => {
+    setModal(Modal.confirm);
+  };
+
+  const justTransfer = useCallback(
+    (overrides: any) => {
+      escrow
+        .transfer(address, amount, overrides)
+        .then((transaction: TransactionResponse) => {
+          setModal(Modal.staking);
+          localStorage.setItem(TRANSACTION_KEY, transaction.hash);
+          return library.waitForTransaction(transaction.hash);
+        })
+        .then((receipt: TransactionReceipt) => {
+          if (receipt.status === 0) {
+            throw new Error(`Transaction ${receipt.transactionHash} failed`);
+          }
+          localStorage.removeItem(TRANSACTION_KEY);
+          setModal(Modal.staking);
+        })
+        .catch(() => {
+          localStorage.removeItem(TRANSACTION_KEY);
+          setModal(Modal.error);
         });
     },
     [address, amount, escrow, library]
@@ -105,6 +129,7 @@ const WorkerPage = () => {
       }
       allowancePromise
         .then((transaction: TransactionResponse) => {
+          setModal(Modal.staking);
           localStorage.setItem(TRANSACTION_KEY, transaction.hash);
           return library.waitForTransaction(transaction.hash);
         })
@@ -125,8 +150,10 @@ const WorkerPage = () => {
             throw new Error(`Transaction ${receipt.transactionHash} failed`);
           }
           localStorage.removeItem(TRANSACTION_KEY);
+          setModal(Modal.staking);
         })
         .catch(() => {
+          setModal(Modal.error);
           localStorage.removeItem(TRANSACTION_KEY);
         });
     },
@@ -137,6 +164,7 @@ const WorkerPage = () => {
     const overrides = {
       gasPrice: gasFee * 1e9,
     };
+    setModal(Modal.awaiting);
     const allowed = await token.allowance(account, escrowAddress);
     const diff = allowed.sub(amount);
     if (diff.eq(0)) {
@@ -162,7 +190,8 @@ const WorkerPage = () => {
       [Modal.staking]: <StakingModal />,
       [Modal.unstaking]: <StakingModal unstake />,
       [Modal.error]: <ErrorModal onClose={closeModal} />,
-      [Modal.success]: <SuccessModal />,
+      [Modal.successStaking]: <SuccessModal onClose={closeModal} />,
+      [Modal.successUnstaking]: <SuccessModal onClose={closeModal} unstake />,
     }),
     [handleStake]
   );
@@ -183,7 +212,7 @@ const WorkerPage = () => {
           setModal(Modal.error);
           throw new Error(`Transaction ${receipt.transactionHash} failed`);
         }
-        closeModal();
+        setModal(Modal.unstaking);
       })
       .catch(() => {
         setModal(Modal.error);
@@ -216,12 +245,12 @@ const WorkerPage = () => {
       <div className={css.submitBtn}>
         <Button
           disabled={!amount}
-          onClick={isUnstake ? handleUnstake : handleStake}
+          onClick={isUnstake ? handleUnstake : prepareStake}
         >
           {isUnstake ? 'Unstake' : 'Stake'} Tokens
         </Button>
       </div>
-      {modal && modals[modal]}
+      {modal !== null ? modals[modal] : null}
     </div>
   );
 };
