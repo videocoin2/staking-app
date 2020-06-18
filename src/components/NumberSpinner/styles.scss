@@ -1,0 +1,49 @@
+.custom__number-spinner {
+  height: 50px;
+
+  .rc-input-number {
+    border-radius: 8px !important;
+    height: 100%;
+    width: 85px;
+    border-color: #5F4681;
+  }
+
+  .rc-input-number-focused {
+    box-shadow: none;
+  }
+
+  .rc-input-number-handler-up {
+    border-color: #5F4681 !important;
+    background-color: #5F4681 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-right-radius: 7px;
+  }
+
+  .rc-input-number-input-wrap {
+    input {
+      background-color: #0C0417;
+      color: #CCB1F2;
+      font-family: Rubik;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0.12px;
+      line-height: 24px;
+      text-align: center;
+      border-radius: 8px !important;
+    }
+  }
+
+  .rc-input-number-handler {
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #3F2A5D;
+    border-bottom-right-radius: 7px;
+    cursor: pointer;
+  }
+
+  .rc-input-number-handler-wrap {
+    border: none !important;
+  }
+}

@@ -1,0 +1,52 @@
+.root {
+  padding: 20px 32px 32px;
+  border-top: 1px solid;
+  border-image: linear-gradient(178deg, #634983 1%, #483664) 100% 1;
+}
+
+.card {
+  background-image: linear-gradient(225deg, #7234c8 0%, #4e238e 100%);
+  border-radius: 8px;
+  padding: 12px 20px;
+  margin-bottom: 12px;
+  margin-top: 14px;
+}
+.walletTop {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  & ~ div {
+    margin-top: 24px;
+  }
+  img {
+    margin-right: 24px;
+  }
+}
+.address {
+  overflow: hidden;
+  div:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.balanceRow {
+  display: flex;
+  align-items: baseline;
+  &:not(:last-child) {
+    margin-bottom: 8px;
+  }
+  & > div:first-child {
+    margin-right: auto;
+  }
+  & > div:last-child {
+    width: 32px;
+    text-align: right;
+  }
+}
+
+.totalStake {
+  .balanceRow {
+    padding-left: 20px;
+  }
+}

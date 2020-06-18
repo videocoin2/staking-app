@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 63.1 (101010) - https://sketch.com -->
+    <title>0009FFBB-903A-4340-A515-B210924E03ED</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <linearGradient x1="42.2638487%" y1="0%" x2="42.2638487%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#1B0D2F" offset="0%"></stop>
+            <stop stop-color="#0C0417" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="99.6204738%" id="linearGradient-2">
+            <stop stop-color="#5F4681" offset="0%"></stop>
+            <stop stop-color="#3F2A5D" offset="99.9049831%"></stop>
+        </linearGradient>
+        <rect id="path-3" x="0" y="0" width="75" height="48" rx="8"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Screens/Laptop/Empty" transform="translate(-867.000000, -303.000000)">
+            <rect id="Rectangle" fill="url(#linearGradient-1)" x="360" y="0" width="664" height="643"></rect>
+            <g id="RAM" transform="translate(408.000000, 207.000000)">
+                <g id="Stacked-Group-4" transform="translate(400.000000, 68.000000)">
+                    <g id="Group-2-Copy">
+                        <mask id="mask-4" fill="white">
+                            <use xlink:href="#path-3"></use>
+                        </mask>
+                        <rect stroke="url(#linearGradient-2)" x="0.5" y="0.5" width="74" height="47" rx="8"></rect>
+                        <g id="Bounds-2" mask="url(#mask-4)">
+                            <g transform="translate(59.000000, 0.000000)">
+                                <rect id="Bounds" fill="none" x="0" y="0" width="16" height="48"></rect>
+                                <rect id="Bounds" fill="#3F2A5D" fill-rule="evenodd" x="0" y="24" width="16" height="24"></rect>
+                                <g id="Icons/Arrow-Up/16px" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(0.000000, 28.000000)">
+                                    <path d="M7.41665091,4.81668873 C7.73882571,4.365644 8.25482476,4.35675466 8.58334909,4.81668873 L12.4166509,10.1833113 C12.7388257,10.634356 12.5443356,11 12.0046024,11 L3.99539757,11 C3.44565467,11 3.25482476,10.6432453 3.58334909,10.1833113 L7.41665091,4.81668873 Z" id="dropdown_arrow_color" fill="#A38FC0" transform="translate(8.000000, 7.500000) rotate(180.000000) translate(-8.000000, -7.500000) "></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
