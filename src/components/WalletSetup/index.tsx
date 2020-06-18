@@ -1,11 +1,12 @@
 import React from 'react';
-import { Typography } from 'kit';
+import { Typography, Button } from 'kit';
 import css from './styles.module.scss';
 import img from './assets/img.jpg';
 import img2x from './assets/img@2x.jpg';
 import Grid from '../Grid';
 
 const WalletSetup = () => {
+  const onClick = () => ethereum.enable();
   return (
     <div>
       <Typography type="title">Finish MetaMask Setup</Typography>
@@ -17,7 +18,10 @@ const WalletSetup = () => {
       </div>
       <Grid>
         <div className={css.installExtension}>
-          <Typography>Finish Setting Up MetaMask</Typography>
+          <Typography type="subtitleThin">
+            Finish Setting Up MetaMask
+          </Typography>
+          <Button onClick={onClick}>Finish Setup</Button>
         </div>
         <a
           href="https://tokenmarket.net/what-is/how-to-install-and-setup-metamask/"
