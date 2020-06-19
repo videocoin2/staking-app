@@ -33,14 +33,12 @@ const AmountInput = ({
   };
   const handlePercentClick = (value: number) => {
     const percentValue = BigNumber.from(vidBalance).div(100).mul(value);
-    const formattedPercentValue = parseFloat(
-      formatEther(percentValue)
-    ).toPrecision(5);
+    const formattedPercentValue = parseFloat(formatEther(percentValue)).toFixed(
+      2
+    );
     onChange(formattedPercentValue);
   };
-  const formattedVidBalance = parseFloat(formatEther(vidBalance)).toPrecision(
-    5
-  );
+  const formattedVidBalance = parseFloat(formatEther(vidBalance)).toFixed(2);
   return (
     <div className={css.amount}>
       <div className={css.amountAvailable}>

@@ -1,12 +1,16 @@
-import React from 'react';
-import NodeStatus from './NodeStatus';
+import { formatEther } from '@ethersproject/units';
 import { Typography } from 'kit';
+import React from 'react';
 import store from '../../store';
+import NodeStatus from './NodeStatus';
 
 const NodeRow = ({ node }: { node: any }) => {
   const { status, name, address, personalStake = 0 } = node;
   const { selectWorker } = store;
   const handleSelect = () => selectWorker(node);
+  const formattedPersonalStake = parseFloat(formatEther(personalStake)).toFixed(
+    2
+  );
   return (
     <tr onClick={handleSelect}>
       <td>
@@ -20,7 +24,7 @@ const NodeRow = ({ node }: { node: any }) => {
       </td>
       <td>
         <Typography tagName="span" type="smallBody">
-          {personalStake}
+          {formattedPersonalStake}
         </Typography>{' '}
         <Typography tagName="span" type="caption">
           VID

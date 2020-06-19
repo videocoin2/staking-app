@@ -3,6 +3,7 @@ import {
   TransactionReceipt,
   TransactionResponse,
 } from '@ethersproject/providers';
+import { formatEther, parseEther } from '@ethersproject/units';
 import { useWeb3React } from '@web3-react/core';
 import { ReactComponent as ArrowLeft } from 'assets/arrowLeft.svg';
 import escrowInterface from 'contract/escrow.abi.json';
@@ -90,7 +91,7 @@ const WorkerPage = () => {
   const justTransfer = useCallback(
     (overrides: any) => {
       escrow
-        .transfer(address, amount, overrides)
+        .transfer(address, parseEther(amount), overrides)
         .then((transaction: TransactionResponse) => {
           setModal(Modal.staking);
           localStorage.setItem(TRANSACTION_KEY, transaction.hash);
@@ -139,7 +140,7 @@ const WorkerPage = () => {
           }
           localStorage.removeItem(TRANSACTION_KEY);
 
-          return escrow.transfer(address, amount, overrides);
+          return escrow.transfer(address, parseEther(amount), overrides);
         })
         .then((transaction: TransactionResponse) => {
           localStorage.setItem(TRANSACTION_KEY, transaction.hash);
@@ -166,7 +167,7 @@ const WorkerPage = () => {
     };
     setModal(Modal.awaiting);
     const allowed = await token.allowance(account, escrowAddress);
-    const diff = allowed.sub(amount);
+    const diff = allowed.sub(parseEther(amount));
     if (diff.eq(0)) {
       justTransfer(overrides);
     } else {
@@ -220,6 +221,10 @@ const WorkerPage = () => {
   };
   const isUnstake = stake === StakeType.Unstake;
   if (!selectedWorker) return null;
+
+  const formattedPersonalStake = parseFloat(formatEther(personalStake)).toFixed(
+    2
+  );
   return (
     <div className={css.root}>
       <button type="button" className={css.backBtn} onClick={handleBack}>
@@ -230,7 +235,7 @@ const WorkerPage = () => {
       <div className={css.currentStake}>
         <Typography type="subtitle">Current Stake</Typography>
         <Typography type="subtitle" theme="white">
-          {personalStake}
+          {formattedPersonalStake}
         </Typography>
         <Typography type="bodyThin">VID</Typography>
       </div>
