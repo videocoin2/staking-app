@@ -1,9 +1,9 @@
-import { BigNumber } from '@ethersproject/bignumber';
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { formatEther } from '@ethersproject/units';
 import { Input, Typography } from 'kit';
 import { observer } from 'mobx-react-lite';
 import React, { FormEvent } from 'react';
-import store from '../../store';
+import { StakeType } from './StakeToggle';
 import css from './styles.module.scss';
 
 const percentage = [25, 50, 75, 100];
@@ -22,35 +22,42 @@ const PercentAmount = ({ onClick }: { onClick: (val: number) => void }) => {
 
 const AmountInput = ({
   value,
+  totalValue,
+  stake,
   onChange,
 }: {
   value: string;
+  totalValue: BigNumberish;
+  stake: StakeType;
   onChange: (val: string) => void;
 }) => {
-  const { vidBalance } = store;
   const handleChange = (e: FormEvent<HTMLInputElement>) => {
     onChange(e.currentTarget.value);
   };
   const handlePercentClick = (value: number) => {
-    const percentValue = BigNumber.from(vidBalance).div(100).mul(value);
+    const percentValue = BigNumber.from(totalValue).div(100).mul(value);
     const formattedPercentValue = parseFloat(formatEther(percentValue)).toFixed(
       2
     );
     onChange(formattedPercentValue);
   };
-  const formattedVidBalance = parseFloat(formatEther(vidBalance)).toFixed(2);
+  const isUnstake = stake === StakeType.Unstake;
+  const formattedTotalValue = parseFloat(formatEther(totalValue)).toFixed(2);
   return (
     <div className={css.amount}>
       <div className={css.amountAvailable}>
-        <Typography>Available in Wallet:</Typography>
-        <Typography type="body">{formattedVidBalance}</Typography>&nbsp;
+        <Typography>
+          {isUnstake ? 'Available to Unstake:' : 'Available in Wallet:'}
+        </Typography>
+        <Typography type="body">{formattedTotalValue}</Typography>
+        &nbsp;
         <Typography>VID</Typography>
       </div>
       <Input
         type="number"
         value={value}
         onChange={handleChange}
-        label="Amount To Stake"
+        label={`Amount To ${isUnstake ? 'Unstake' : 'Stake'}`}
         postfix={() => <PercentAmount onClick={handlePercentClick} />}
       />
     </div>

@@ -46,10 +46,11 @@ enum Modal {
 const WorkerPage = () => {
   const [stake, setStake] = useState(StakeType.Stake);
   const [amount, setAmount] = useState('');
+  const [cachedAmount, setCachedAmount] = useState('');
   const [gasFee, setGasFee] = useState(1);
   const [modal, setModal] = useState<Modal | null>(null);
   const closeModal = () => setModal(null);
-  const { selectedWorker, selectWorker } = store;
+  const { selectedWorker, selectWorker, vidBalance } = store;
   const { account, library, chainId } = useWeb3React();
   const { name, address, personalStake = 0 } = selectedWorker;
   const signer = library.getSigner(account);
@@ -67,6 +68,9 @@ const WorkerPage = () => {
   const handleStakeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setStake((+value as unknown) as StakeType);
+    const temp = amount;
+    setAmount(cachedAmount);
+    setCachedAmount(temp);
   };
   useEffect(() => {
     if (localStorage.getItem(TRANSACTION_KEY)) {
@@ -196,14 +200,22 @@ const WorkerPage = () => {
     }),
     [handleStake]
   );
-  const handleUnstake = () => {
+  const handleUnstake = async () => {
     setModal(Modal.awaiting);
     const overrides = {
       gasLimit: GAS_LIMIT,
       gasPrice: gasFee * 1e9,
     };
+    const locked = await escrow.locked(account, selectedWorker.address);
+    console.log(locked.toString());
+    console.log(parseEther(amount).toString());
     escrow
-      .transferFrom(selectedWorker.address, account, amount, overrides)
+      .transferFrom(
+        selectedWorker.address,
+        account,
+        parseEther(amount),
+        overrides
+      )
       .then((transaction: TransactionResponse) => {
         setModal(Modal.unstaking);
         return library.waitForTransaction(transaction.hash);
@@ -245,7 +257,12 @@ const WorkerPage = () => {
 
       <StakeToggle value={stake} onChange={handleStakeChange} />
 
-      <AmountInput value={amount} onChange={setAmount} />
+      <AmountInput
+        value={amount}
+        totalValue={isUnstake ? personalStake : vidBalance}
+        stake={stake}
+        onChange={setAmount}
+      />
       <GasFee value={gasFee} onChange={setGasFee} />
       <div className={css.submitBtn}>
         <Button
