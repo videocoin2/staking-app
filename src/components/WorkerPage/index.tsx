@@ -106,7 +106,7 @@ const WorkerPage = () => {
             throw new Error(`Transaction ${receipt.transactionHash} failed`);
           }
           localStorage.removeItem(TRANSACTION_KEY);
-          setModal(Modal.staking);
+          setModal(Modal.successStaking);
         })
         .catch(() => {
           localStorage.removeItem(TRANSACTION_KEY);
@@ -155,7 +155,7 @@ const WorkerPage = () => {
             throw new Error(`Transaction ${receipt.transactionHash} failed`);
           }
           localStorage.removeItem(TRANSACTION_KEY);
-          setModal(Modal.staking);
+          setModal(Modal.successStaking);
         })
         .catch(() => {
           setModal(Modal.error);
@@ -225,7 +225,7 @@ const WorkerPage = () => {
           setModal(Modal.error);
           throw new Error(`Transaction ${receipt.transactionHash} failed`);
         }
-        setModal(Modal.unstaking);
+        setModal(Modal.successUnstaking);
       })
       .catch(() => {
         setModal(Modal.error);
