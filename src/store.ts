@@ -1,6 +1,7 @@
-import { observable, action, reaction } from 'mobx';
-import axios from 'axios';
 import { formatEther } from '@ethersproject/units';
+import axios from 'axios';
+import { action, observable, reaction } from 'mobx';
+const DELEGATIONS_API_URL = process.env.REACT_APP_DELEGATIONS_API_URL;
 
 export interface Delegate {
   amount: string;
@@ -71,9 +72,7 @@ class Store {
   @action
   fetchDelegations = async () => {
     if (!this.account) return;
-    const res = await axios(
-      `https://symphony.dev.videocoin.net/api/v1/delegations/${this.account}`
-    );
+    const res = await axios(`${DELEGATIONS_API_URL}/${this.account}`);
     this.delegations.replace(res.data.delegations);
     this.totalStake = res.data.total;
   };
