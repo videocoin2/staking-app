@@ -62,6 +62,13 @@ const Wallet = () => {
   const formattedEthBalance = parseFloat(formatEther(ethBalance)).toPrecision(
     5
   );
+  // VID token has same precision as ETH coin, so we can use ether format utils
+  const formattedVidBalance = parseFloat(formatEther(vidBalance)).toPrecision(
+    5
+  );
+  const formattedTotalStake = parseFloat(
+    totalStake ? formatEther(totalStake) : '0'
+  ).toPrecision(5);
 
   return (
     <>
@@ -91,7 +98,7 @@ const Wallet = () => {
               <div className={css.balanceRow}>
                 <Typography type="body">VID Balance</Typography>
                 <Typography theme="white" type="body">
-                  {vidBalance.toFixed(5)}
+                  {formattedVidBalance}
                 </Typography>
                 <Typography type="smallBodyThin">VID</Typography>
               </div>
@@ -123,7 +130,7 @@ const Wallet = () => {
             <div className={css.balanceRow}>
               <Typography type="body">Total Staked</Typography>
               <Typography theme="white" type="body">
-                {totalStake}
+                {formattedTotalStake}
               </Typography>
               <Typography type="smallBodyThin">VID</Typography>
             </div>

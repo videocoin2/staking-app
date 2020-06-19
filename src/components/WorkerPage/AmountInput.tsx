@@ -1,4 +1,5 @@
-import { parseEther } from '@ethersproject/units';
+import { BigNumber } from '@ethersproject/bignumber';
+import { formatEther } from '@ethersproject/units';
 import { Input, Typography } from 'kit';
 import { observer } from 'mobx-react-lite';
 import React, { FormEvent } from 'react';
@@ -28,16 +29,23 @@ const AmountInput = ({
 }) => {
   const { vidBalance } = store;
   const handleChange = (e: FormEvent<HTMLInputElement>) => {
-    onChange(parseEther(e.currentTarget.value).toString());
+    onChange(e.currentTarget.value);
   };
   const handlePercentClick = (value: number) => {
-    onChange(((vidBalance / 100) * value).toFixed(5));
+    const percentValue = BigNumber.from(vidBalance).div(100).mul(value);
+    const formattedPercentValue = parseFloat(
+      formatEther(percentValue)
+    ).toPrecision(5);
+    onChange(formattedPercentValue);
   };
+  const formattedVidBalance = parseFloat(formatEther(vidBalance)).toPrecision(
+    5
+  );
   return (
     <div className={css.amount}>
       <div className={css.amountAvailable}>
         <Typography>Available in Wallet:</Typography>
-        <Typography type="body">{vidBalance}</Typography>&nbsp;
+        <Typography type="body">{formattedVidBalance}</Typography>&nbsp;
         <Typography>VID</Typography>
       </div>
       <Input

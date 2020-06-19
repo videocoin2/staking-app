@@ -1,5 +1,4 @@
 import { BigNumberish } from '@ethersproject/bignumber';
-import { formatEther } from '@ethersproject/units';
 import axios from 'axios';
 import { action, observable, reaction } from 'mobx';
 const DELEGATIONS_API_URL = process.env.REACT_APP_DELEGATIONS_API_URL;
@@ -22,7 +21,7 @@ class Store {
   selectedWorker: any = null;
 
   @observable
-  vidBalance: any = 0;
+  vidBalance: BigNumberish = 0;
 
   @observable
   ethBalance: BigNumberish = 0;
@@ -49,9 +48,8 @@ class Store {
   };
 
   @action
-  setVidBalance = (balance: number) => {
-    if (!balance) return;
-    this.vidBalance = +formatEther(balance);
+  setVidBalance = (balance: BigNumberish) => {
+    this.vidBalance = balance;
   };
   @action
   setEthBalance = (balance: BigNumberish) => {
