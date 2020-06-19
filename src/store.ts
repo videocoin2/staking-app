@@ -1,3 +1,4 @@
+import { BigNumberish } from '@ethersproject/bignumber';
 import { formatEther } from '@ethersproject/units';
 import axios from 'axios';
 import { action, observable, reaction } from 'mobx';
@@ -24,7 +25,7 @@ class Store {
   vidBalance: any = 0;
 
   @observable
-  ethBalance: number = 0;
+  ethBalance: BigNumberish = 0;
 
   @observable
   token: any = null;
@@ -53,7 +54,7 @@ class Store {
     this.vidBalance = +formatEther(balance);
   };
   @action
-  setEthBalance = (balance: number) => {
+  setEthBalance = (balance: BigNumberish) => {
     this.ethBalance = balance;
   };
 

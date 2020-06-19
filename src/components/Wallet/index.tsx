@@ -1,13 +1,13 @@
-import React, { useCallback, useEffect } from 'react';
 import { formatEther } from '@ethersproject/units';
-import { Typography } from 'kit';
-import { observer } from 'mobx-react-lite';
 import { useWeb3React } from '@web3-react/core';
+import { Typography } from 'kit';
+import contract from 'lib/contract';
+import { observer } from 'mobx-react-lite';
+import React, { useCallback, useEffect } from 'react';
 import store from 'store';
 import logo from './assets/logo.png';
 import logo2x from './assets/logo@2x.png';
 import css from './styles.module.scss';
-import contract from 'lib/contract';
 
 const Wallet = () => {
   const {
@@ -60,7 +60,7 @@ const Wallet = () => {
   }, [getBalance]);
 
   const formattedEthBalance = parseFloat(formatEther(ethBalance)).toPrecision(
-    4
+    5
   );
 
   return (

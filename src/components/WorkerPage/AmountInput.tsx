@@ -1,8 +1,9 @@
-import React, { FormEvent } from 'react';
+import { parseEther } from '@ethersproject/units';
 import { Input, Typography } from 'kit';
-import css from './styles.module.scss';
-import store from '../../store';
 import { observer } from 'mobx-react-lite';
+import React, { FormEvent } from 'react';
+import store from '../../store';
+import css from './styles.module.scss';
 
 const percentage = [25, 50, 75, 100];
 
@@ -27,7 +28,7 @@ const AmountInput = ({
 }) => {
   const { vidBalance } = store;
   const handleChange = (e: FormEvent<HTMLInputElement>) => {
-    onChange(e.currentTarget.value);
+    onChange(parseEther(e.currentTarget.value).toString());
   };
   const handlePercentClick = (value: number) => {
     onChange(((vidBalance / 100) * value).toFixed(5));

@@ -1,3 +1,15 @@
+import { BigNumber } from '@ethersproject/bignumber';
+import {
+  TransactionReceipt,
+  TransactionResponse,
+} from '@ethersproject/providers';
+import { useWeb3React } from '@web3-react/core';
+import { ReactComponent as ArrowLeft } from 'assets/arrowLeft.svg';
+import escrowInterface from 'contract/escrow.abi.json';
+import tokenInterface from 'contract/token.abi.json';
+import { Button, Typography } from 'kit';
+import contract from 'lib/contract';
+import { observer } from 'mobx-react-lite';
 import React, {
   ChangeEvent,
   ReactNode,
@@ -6,29 +18,17 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { Typography, Button } from 'kit';
-import { BigNumber } from '@ethersproject/bignumber';
-import { observer } from 'mobx-react-lite';
 import store from 'store';
-import {
-  TransactionReceipt,
-  TransactionResponse,
-} from '@ethersproject/providers';
-import css from './styles.module.scss';
-import { ReactComponent as ArrowLeft } from 'assets/arrowLeft.svg';
-import StakeToggle, { StakeType } from './StakeToggle';
-import GasFee from './GasFee';
-import AmountInput from './AmountInput';
-import contract from 'lib/contract';
-import { useWeb3React } from '@web3-react/core';
-import tokenInterface from 'contract/token.abi.json';
-import escrowInterface from 'contract/escrow.abi.json';
-import ConfirmTransactionsModal from './ConfirmTransactionsModal';
-import AwaitingModal from './AwaitingModal';
-import ErrorModal from './ErrorModal';
-import StakingModal from './StakingModal';
-import SuccessModal from './SuccessModal';
 import { TRANSACTION_KEY } from '../../const';
+import AmountInput from './AmountInput';
+import AwaitingModal from './AwaitingModal';
+import ConfirmTransactionsModal from './ConfirmTransactionsModal';
+import ErrorModal from './ErrorModal';
+import GasFee from './GasFee';
+import StakeToggle, { StakeType } from './StakeToggle';
+import StakingModal from './StakingModal';
+import css from './styles.module.scss';
+import SuccessModal from './SuccessModal';
 
 const GAS_LIMIT = 800000;
 
