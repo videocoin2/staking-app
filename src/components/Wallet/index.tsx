@@ -2,6 +2,7 @@ import { formatEther } from '@ethersproject/units';
 import { useWeb3React } from '@web3-react/core';
 import { Typography } from 'kit';
 import contract from 'lib/contract';
+import { formatToken } from 'lib/units';
 import { observer } from 'mobx-react-lite';
 import React, { useCallback, useEffect } from 'react';
 import store from 'store';
@@ -61,9 +62,9 @@ const Wallet = () => {
 
   const formattedEthBalance = parseFloat(formatEther(ethBalance)).toFixed(2);
   // VID token has same precision as ETH coin, so we can use ether format utils
-  const formattedVidBalance = parseFloat(formatEther(vidBalance)).toFixed(2);
+  const formattedVidBalance = parseFloat(formatToken(vidBalance)).toFixed(2);
   const formattedTotalStake = parseFloat(
-    totalStake ? formatEther(totalStake) : '0'
+    totalStake ? formatToken(totalStake) : '0'
   ).toFixed(2);
 
   return (

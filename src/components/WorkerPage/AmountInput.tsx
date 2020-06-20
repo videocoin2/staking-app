@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
-import { formatEther } from '@ethersproject/units';
 import { Input, Typography } from 'kit';
+import { formatToken } from 'lib/units';
 import { observer } from 'mobx-react-lite';
 import React, { FormEvent } from 'react';
 import { StakeType } from './StakeToggle';
@@ -36,13 +36,13 @@ const AmountInput = ({
   };
   const handlePercentClick = (value: number) => {
     const percentValue = BigNumber.from(totalValue).div(100).mul(value);
-    const formattedPercentValue = parseFloat(formatEther(percentValue)).toFixed(
+    const formattedPercentValue = parseFloat(formatToken(percentValue)).toFixed(
       2
     );
     onChange(formattedPercentValue);
   };
   const isUnstake = stake === StakeType.Unstake;
-  const formattedTotalValue = parseFloat(formatEther(totalValue)).toFixed(2);
+  const formattedTotalValue = parseFloat(formatToken(totalValue)).toFixed(2);
   return (
     <div className={css.amount}>
       <div className={css.amountAvailable}>

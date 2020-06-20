@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Typography } from 'kit';
 import { formatUnits } from '@ethersproject/units';
-import useToggle from 'hooks/useToggle';
 import fetchGasPrices from 'api/fetchGasPrice';
-import css from './styles.module.scss';
+import useToggle from 'hooks/useToggle';
+import { Typography } from 'kit';
+import React, { useCallback, useEffect, useState } from 'react';
 import GasFeeModal from './GasFeeModal';
+import css from './styles.module.scss';
 
 const GasFee = ({
   value,
@@ -46,7 +46,7 @@ const GasFee = ({
         </button>
         <div>
           <Typography tagName="span" type="smallBody">
-            {formatUnits(value, 'gwei')}
+            {formatUnits(value * 1e9)}
           </Typography>{' '}
           <Typography tagName="span" type="smallBodyThin">
             ETH

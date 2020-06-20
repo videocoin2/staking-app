@@ -3,13 +3,13 @@ import {
   TransactionReceipt,
   TransactionResponse,
 } from '@ethersproject/providers';
-import { formatEther, parseEther } from '@ethersproject/units';
 import { useWeb3React } from '@web3-react/core';
 import { ReactComponent as ArrowLeft } from 'assets/arrowLeft.svg';
 import escrowInterface from 'contract/escrow.abi.json';
 import tokenInterface from 'contract/token.abi.json';
 import { Button, Typography } from 'kit';
 import contract from 'lib/contract';
+import { formatToken, parseToken } from 'lib/units';
 import { observer } from 'mobx-react-lite';
 import React, {
   ChangeEvent,
@@ -95,7 +95,7 @@ const WorkerPage = () => {
   const justTransfer = useCallback(
     (overrides: any) => {
       escrow
-        .transfer(address, parseEther(amount), overrides)
+        .transfer(address, parseToken(amount), overrides)
         .then((transaction: TransactionResponse) => {
           setModal(Modal.staking);
           localStorage.setItem(TRANSACTION_KEY, transaction.hash);
@@ -144,7 +144,7 @@ const WorkerPage = () => {
           }
           localStorage.removeItem(TRANSACTION_KEY);
 
-          return escrow.transfer(address, parseEther(amount), overrides);
+          return escrow.transfer(address, parseToken(amount), overrides);
         })
         .then((transaction: TransactionResponse) => {
           localStorage.setItem(TRANSACTION_KEY, transaction.hash);
@@ -171,7 +171,7 @@ const WorkerPage = () => {
     };
     setModal(Modal.awaiting);
     const allowed = await token.allowance(account, escrowAddress);
-    const diff = allowed.sub(parseEther(amount));
+    const diff = allowed.sub(parseToken(amount));
     if (diff.eq(0)) {
       justTransfer(overrides);
     } else {
@@ -208,12 +208,12 @@ const WorkerPage = () => {
     };
     const locked = await escrow.locked(account, selectedWorker.address);
     console.log(locked.toString());
-    console.log(parseEther(amount).toString());
+    console.log(parseToken(amount).toString());
     escrow
       .transferFrom(
         selectedWorker.address,
         account,
-        parseEther(amount),
+        parseToken(amount),
         overrides
       )
       .then((transaction: TransactionResponse) => {
@@ -234,7 +234,7 @@ const WorkerPage = () => {
   const isUnstake = stake === StakeType.Unstake;
   if (!selectedWorker) return null;
 
-  const formattedPersonalStake = parseFloat(formatEther(personalStake)).toFixed(
+  const formattedPersonalStake = parseFloat(formatToken(personalStake)).toFixed(
     2
   );
   return (

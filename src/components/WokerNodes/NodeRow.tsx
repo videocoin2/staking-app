@@ -1,5 +1,5 @@
-import { formatEther } from '@ethersproject/units';
 import { Typography } from 'kit';
+import { formatToken } from 'lib/units';
 import React from 'react';
 import store from '../../store';
 import NodeStatus from './NodeStatus';
@@ -8,7 +8,7 @@ const NodeRow = ({ node }: { node: any }) => {
   const { status, name, address, personalStake = 0 } = node;
   const { selectWorker } = store;
   const handleSelect = () => selectWorker(node);
-  const formattedPersonalStake = parseFloat(formatEther(personalStake)).toFixed(
+  const formattedPersonalStake = parseFloat(formatToken(personalStake)).toFixed(
     2
   );
   return (
