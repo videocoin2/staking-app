@@ -6,11 +6,11 @@ import { formatToken } from 'lib/units';
 import { observer } from 'mobx-react-lite';
 import React, { useCallback, useEffect } from 'react';
 import store from 'store';
-import { BALANCE_FETCH_INTERVAL } from '../../const';
-import useInterval from '../../hooks/useInterval';
 import logo from './assets/logo.png';
 import logo2x from './assets/logo@2x.png';
 import css from './styles.module.scss';
+import useInterval from '../../hooks/useInterval';
+import { BALANCE_FETCH_INTERVAL } from '../../const';
 
 const Wallet = () => {
   const {
@@ -19,11 +19,8 @@ const Wallet = () => {
     setEthBalance,
     ethBalance,
     vidBalance,
-    vidProvider,
     setToken,
-    setManager,
     setAccount,
-    fetchDelegations,
     token,
     totalStake,
   } = store;
@@ -51,29 +48,12 @@ const Wallet = () => {
   }, [account, chainId, getEthBalance, getTokenBalance, library, token]);
   useEffect(() => {
     if (!account || !library || !chainId) return;
-    const tokenAbi = require('contract/token.json').abi;
-    const tokenAddress = require('contract/token.json').networks[chainId]
-      ?.address;
-    const vid = contract(tokenAddress, tokenAbi, library);
-    const managerAbi = require('contract/staking-manager.json').abi;
-    const managerAddress = require('contract/staking-manager.json').networks[
-      'dev'
-    ]?.address;
-    const manager = contract(managerAddress, managerAbi, vidProvider);
+    const abi = require('contract/token.json').abi;
+    const address = require('contract/token.json').networks[chainId]?.address;
+    const vid = contract(address, abi, library);
     setToken(vid);
     setAccount(account);
-    setManager(manager);
-    fetchDelegations();
-  }, [
-    account,
-    chainId,
-    library,
-    vidProvider,
-    setAccount,
-    setToken,
-    setManager,
-    fetchDelegations,
-  ]);
+  }, [account, chainId, library, setAccount, setToken]);
   useEffect(() => {
     getBalance();
   }, [getBalance]);
