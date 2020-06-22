@@ -30,6 +30,7 @@ import StakeToggle, { StakeType } from './StakeToggle';
 import StakingModal from './StakingModal';
 import css from './styles.module.scss';
 import SuccessModal from './SuccessModal';
+import TermsPolicyModal from './TermsPolicyModal';
 
 const GAS_LIMIT = 800000;
 
@@ -41,6 +42,8 @@ enum Modal {
   error,
   successUnstaking,
   successStaking,
+  agreementStake,
+  agreementUnstake,
 }
 
 const WorkerPage = () => {
@@ -54,6 +57,7 @@ const WorkerPage = () => {
   const { account, library, chainId } = useWeb3React();
   const { name, address, personalStake = 0 } = selectedWorker;
   const signer = library.getSigner(account);
+  console.log(chainId);
   const tokenAddress = chainId
     ? require('contract/token.json').networks[chainId]?.address
     : '0x0';
@@ -187,20 +191,6 @@ const WorkerPage = () => {
     justTransfer,
     token,
   ]);
-  const modals: Record<Modal, ReactNode> = useMemo(
-    () => ({
-      [Modal.confirm]: (
-        <ConfirmTransactionsModal onClose={closeModal} onNext={handleStake} />
-      ),
-      [Modal.awaiting]: <AwaitingModal />,
-      [Modal.staking]: <StakingModal />,
-      [Modal.unstaking]: <StakingModal unstake />,
-      [Modal.error]: <ErrorModal onClose={closeModal} />,
-      [Modal.successStaking]: <SuccessModal onClose={closeModal} />,
-      [Modal.successUnstaking]: <SuccessModal onClose={closeModal} unstake />,
-    }),
-    [handleStake]
-  );
   const handleUnstake = async () => {
     setModal(Modal.awaiting);
     const overrides = {
@@ -232,7 +222,29 @@ const WorkerPage = () => {
         setModal(Modal.error);
       });
   };
+  const modals: Record<Modal, ReactNode> = useMemo(
+    () => ({
+      [Modal.confirm]: (
+        <ConfirmTransactionsModal onClose={closeModal} onNext={handleStake} />
+      ),
+      [Modal.awaiting]: <AwaitingModal />,
+      [Modal.staking]: <StakingModal />,
+      [Modal.unstaking]: <StakingModal unstake />,
+      [Modal.error]: <ErrorModal onClose={closeModal} />,
+      [Modal.successStaking]: <SuccessModal onClose={closeModal} />,
+      [Modal.successUnstaking]: <SuccessModal onClose={closeModal} unstake />,
+      [Modal.agreementStake]: (
+        <TermsPolicyModal onClose={closeModal} onAgree={prepareStake} />
+      ),
+      [Modal.agreementUnstake]: (
+        <TermsPolicyModal onClose={closeModal} onAgree={handleUnstake} />
+      ),
+    }),
+    [handleStake]
+  );
   const isUnstake = stake === StakeType.Unstake;
+  const requireStake = () =>
+    setModal(isUnstake ? Modal.agreementUnstake : Modal.agreementStake);
   if (!selectedWorker) return null;
 
   const formattedPersonalStake = parseFloat(formatToken(personalStake)).toFixed(
@@ -266,10 +278,7 @@ const WorkerPage = () => {
       />
       <GasFee value={gasFee} onChange={setGasFee} />
       <div className={css.submitBtn}>
-        <Button
-          disabled={!amount}
-          onClick={isUnstake ? handleUnstake : prepareStake}
-        >
+        <Button disabled={!amount} onClick={requireStake}>
           {isUnstake ? 'Unstake' : 'Stake'} Tokens
         </Button>
       </div>
