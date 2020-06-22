@@ -28,7 +28,7 @@ export function useEagerConnect() {
   return tried;
 }
 
-export function useInactiveListener(suppress: boolean = false) {
+export function useInactiveListener(suppress = false) {
   const { active, error, activate } = useWeb3React();
   const handleConnect = useCallback(() => {
     activate(injected);

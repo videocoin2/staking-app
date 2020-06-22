@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from '../Modal';
-import { ActionBar, Button, Typography } from 'kit';
+import { ActionBar, Button, Typography } from 'ui-kit';
 
 const ErrorModal = ({ onClose }: { onClose: () => void }) => {
   return (

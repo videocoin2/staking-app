@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Button } from 'kit';
+import { Typography, Button } from 'ui-kit';
 import css from './styles.module.scss';
 import img from './assets/img.jpg';
 import img2x from './assets/img@2x.jpg';

@@ -1,5 +1,5 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
-import { Input, Typography } from 'kit';
+import { Input, Typography } from 'ui-kit';
 import { formatToken } from 'lib/units';
 import { observer } from 'mobx-react-lite';
 import React, { FormEvent } from 'react';

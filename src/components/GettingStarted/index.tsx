@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Button } from 'kit';
+import { Typography, Button } from 'ui-kit';
 import img from './assets/download-extension.png';
 import img2x from './assets/download-extension@2x.png';
 import browsers from './assets/browsers.png';

@@ -7,7 +7,7 @@ import { useWeb3React } from '@web3-react/core';
 import { ReactComponent as ArrowLeft } from 'assets/arrowLeft.svg';
 import escrowInterface from 'contract/escrow.json';
 import tokenInterface from 'contract/token.json';
-import { Button, Typography } from 'kit';
+import { Button, Typography } from 'ui-kit';
 import contract from 'lib/contract';
 import { formatToken, parseToken } from 'lib/units';
 import { observer } from 'mobx-react-lite';

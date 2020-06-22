@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ActionBar, Button, Typography } from 'kit';
+import { ActionBar, Button, Typography } from 'ui-kit';
 import NumberSpinner from '../NumberSpinner';
 import Modal from '../Modal';
 import css from './styles.module.scss';

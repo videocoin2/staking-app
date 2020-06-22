@@ -1,6 +1,6 @@
 import { formatEther } from '@ethersproject/units';
 import { useWeb3React } from '@web3-react/core';
-import { Typography } from 'kit';
+import { Typography } from 'ui-kit';
 import contract from 'lib/contract';
 import { formatToken } from 'lib/units';
 import { observer } from 'mobx-react-lite';

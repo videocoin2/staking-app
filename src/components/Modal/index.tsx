@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal as BaseModal, ModalProps, Overlay } from 'kit';
+import { Modal as BaseModal, ModalProps, Overlay } from 'ui-kit';
 import usePortal from 'react-useportal';
 import useLockBodyScroll from 'hooks/useLockBodyScroll';
 import './modal.scss';

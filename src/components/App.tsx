@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Spinner } from 'kit';
+import { Spinner } from 'ui-kit';
 import { observer } from 'mobx-react-lite';
 import store from 'store';
 import WorkerNodes from './WokerNodes';

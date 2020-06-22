@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Typography, Spinner } from 'kit';
+import { Typography, Spinner } from 'ui-kit';
 import { find, filter, reduce, map, flatten, groupBy, sortBy } from 'lodash/fp';
 import { WorkerStatus } from 'const';
 import useRequest from 'api/useRequest';

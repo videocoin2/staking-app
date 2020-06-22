@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from '../Modal';
-import { Typography } from 'kit';
+import { Typography } from 'ui-kit';
 
 const AwaitingModal = () => {
   return (

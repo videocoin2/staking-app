@@ -30,10 +30,10 @@ class Store {
   token: any = null;
 
   @observable
-  account: string = '';
+  account = '';
 
   @observable
-  totalStake: string = '';
+  totalStake = '';
 
   delegations = observable.array<Delegate>([], { deep: false });
 

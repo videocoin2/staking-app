@@ -1,7 +1,7 @@
 import { formatUnits } from '@ethersproject/units';
 import fetchGasPrices from 'api/fetchGasPrice';
 import useToggle from 'hooks/useToggle';
-import { Typography } from 'kit';
+import { Typography } from 'ui-kit';
 import React, { useCallback, useEffect, useState } from 'react';
 import GasFeeModal from './GasFeeModal';
 import css from './styles.module.scss';

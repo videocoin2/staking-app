@@ -1,4 +1,4 @@
-import { Typography } from 'kit';
+import { Typography } from 'ui-kit';
 import { formatToken } from 'lib/units';
 import React from 'react';
 import store from '../../store';
