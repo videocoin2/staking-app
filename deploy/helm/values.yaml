@@ -1,0 +1,49 @@
+replicasCount: 1
+maxUnavailableCount: 0
+
+image:
+  repository: gcr.io/videocoin-network/staking-app
+  tag: latest
+  pullPolicy: Always
+
+service:
+  name: http
+  type: NodePort
+  externalPort: 80
+  internalPort: 80
+
+autoscaler:
+  minCount: 1
+  maxCount: 10
+
+resources:
+  limits:
+   cpu: 100m
+   memory: 128Mi
+  requests:
+   cpu: 100m
+   memory: 128Mi
+
+config:
+  nginx.conf: |
+    events {
+        worker_connections 1024;
+    }
+
+    http {
+        include /etc/nginx/mime.types;
+
+        server {
+            listen 80;
+            server_name localhost;
+            root /usr/share/nginx/html;
+
+            location / {
+                try_files $uri /index.html;
+            }
+
+            location /app {
+                try_files $uri /index.html;
+            }
+        }
+    }
