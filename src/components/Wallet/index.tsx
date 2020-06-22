@@ -9,6 +9,8 @@ import store from 'store';
 import logo from './assets/logo.png';
 import logo2x from './assets/logo@2x.png';
 import css from './styles.module.scss';
+import useInterval from '../../hooks/useInterval';
+import { BALANCE_FETCH_INTERVAL } from '../../const';
 
 const Wallet = () => {
   const {
@@ -23,16 +25,6 @@ const Wallet = () => {
     totalStake,
   } = store;
   const { account, library, chainId } = useWeb3React();
-
-  useEffect(() => {
-    if (!account || !library || !chainId) return;
-
-    const abi = require('contract/token.json').abi;
-    const address = require('contract/token.json').networks[chainId]?.address;
-    const vid = contract(address, abi, library);
-    setToken(vid);
-    setAccount(account);
-  }, [account, chainId, library, setAccount, setToken]);
   const getTokenBalance = useCallback(async () => {
     try {
       const newBalance = await token.balanceOf(account);
@@ -50,15 +42,22 @@ const Wallet = () => {
     }
   }, [account, library, setEthBalance]);
   const getBalance = useCallback(async () => {
-    if (!account || !library || !token || !chainId) {
-      return;
-    }
+    if (!account || !library || !token || !chainId) return;
     getTokenBalance();
     getEthBalance();
   }, [account, chainId, getEthBalance, getTokenBalance, library, token]);
   useEffect(() => {
+    if (!account || !library || !chainId) return;
+    const abi = require('contract/token.json').abi;
+    const address = require('contract/token.json').networks[chainId]?.address;
+    const vid = contract(address, abi, library);
+    setToken(vid);
+    setAccount(account);
+  }, [account, chainId, library, setAccount, setToken]);
+  useEffect(() => {
     getBalance();
   }, [getBalance]);
+  useInterval(getBalance, BALANCE_FETCH_INTERVAL);
 
   const formattedEthBalance = parseFloat(formatEther(ethBalance)).toFixed(2);
   // VID token has same precision as ETH coin, so we can use ether format utils
@@ -66,7 +65,23 @@ const Wallet = () => {
   const formattedTotalStake = parseFloat(
     totalStake ? formatToken(totalStake) : '0'
   ).toFixed(2);
-
+  const renderMetaMaskData = () => {
+    if (!isMetamaskInstalled) {
+      return (
+        <Typography type="smallBodyThin" theme="sunkissed">
+          Not installed
+        </Typography>
+      );
+    }
+    if (account) {
+      return <Typography type="smallBodyThin">{account}</Typography>;
+    }
+    return (
+      <Typography type="smallBodyThin" theme="sunkissed">
+        No Wallet Setup
+      </Typography>
+    );
+  };
   return (
     <>
       <div className={css.root}>
@@ -76,18 +91,7 @@ const Wallet = () => {
             <img src={logo} srcSet={`${logo2x} 2x`} alt="" />
             <div className={css.address}>
               <Typography type="body">MetaMask</Typography>
-              {!isMetamaskInstalled && (
-                <Typography type="smallBodyThin" theme="sunkissed">
-                  Not installed
-                </Typography>
-              )}
-              {account ? (
-                <Typography type="smallBodyThin">{account}</Typography>
-              ) : (
-                <Typography type="smallBodyThin" theme="sunkissed">
-                  No Wallet Setup
-                </Typography>
-              )}
+              {renderMetaMaskData()}
             </div>
           </div>
           {account && (

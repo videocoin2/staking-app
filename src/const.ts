@@ -13,3 +13,5 @@ export const readableWorkerStatus: Record<WorkerStatus, string> = {
 };
 
 export const TRANSACTION_KEY = 'transaction';
+
+export const BALANCE_FETCH_INTERVAL = 3000;
