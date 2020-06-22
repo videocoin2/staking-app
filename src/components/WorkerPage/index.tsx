@@ -120,13 +120,13 @@ const WorkerPage = () => {
     (diff: BigNumber, overrides: any) => {
       let allowancePromise;
       if (diff.lt(0)) {
-        allowancePromise = token.increaseAllowance(
+        allowancePromise = token.increaseApproval(
           escrowAddress,
           diff.mul(-1),
           overrides
         );
       } else if (diff.gt(0)) {
-        allowancePromise = token.decreaseAllowance(
+        allowancePromise = token.increaseApproval(
           escrowAddress,
           diff,
           overrides
@@ -167,6 +167,7 @@ const WorkerPage = () => {
 
   const handleStake = useCallback(async () => {
     const overrides = {
+      gasLimit: GAS_LIMIT,
       gasPrice: gasFee * 1e9,
     };
     setModal(Modal.awaiting);
