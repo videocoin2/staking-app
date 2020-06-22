@@ -1,4 +1,5 @@
 import { BigNumberish } from '@ethersproject/bignumber';
+import { JsonRpcProvider } from '@ethersproject/providers';
 import axios from 'axios';
 import { action, observable, reaction } from 'mobx';
 const DELEGATIONS_API_URL = process.env.REACT_APP_DELEGATIONS_API_URL;
@@ -14,6 +15,7 @@ class Store {
   constructor() {
     this.checkMetaMask();
     reaction(() => this.account, this.fetchDelegations);
+    this.vidProvider = new JsonRpcProvider(RPC_API_URL);
   }
   @observable
   isMetamaskInstalled = false;
@@ -28,7 +30,13 @@ class Store {
   ethBalance: BigNumberish = 0;
 
   @observable
+  vidProvider: JsonRpcProvider;
+
+  @observable
   token: any = null;
+
+  @observable
+  manager: any = null;
 
   @observable
   account: string = '';
@@ -39,8 +47,18 @@ class Store {
   delegations = observable.array<Delegate>([], { deep: false });
 
   @action
+  setVidProvider = (provider: JsonRpcProvider) => {
+    this.vidProvider = provider;
+  };
+
+  @action
   setToken = (token: any) => {
     this.token = token;
+  };
+
+  @action
+  setManager = (manager: any) => {
+    this.manager = manager;
   };
 
   @action
@@ -74,7 +92,11 @@ class Store {
   fetchDelegations = async () => {
     if (!this.account) return;
     const res = await axios(`${DELEGATIONS_API_URL}/${this.account}`);
-    this.delegations.replace(res.data.delegations);
+    this.delegations.replace(
+      res.data.delegations.filter(
+        (delegate: Delegate) => delegate.amount !== '0'
+      )
+    );
     this.totalStake = res.data.total;
   };
 }

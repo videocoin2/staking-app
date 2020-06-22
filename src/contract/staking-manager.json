@@ -865,7 +865,9 @@
       "type": "function"
     }
   ],
-  "network": {
-    "5": "0x8ada6fe2C3b16BE2bD2764273A3A339B15B16910"
+  "networks": {
+    "dev": {
+      "address": "0x8ada6fe2C3b16BE2bD2764273A3A339B15B16910"
+    }
   }
 }

@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react';
-import { Typography, Spinner } from 'kit';
-import { find, filter, reduce, map, flatten, groupBy, sortBy } from 'lodash/fp';
-import { WorkerStatus } from 'const';
 import useRequest from 'api/useRequest';
-import store from 'store';
+import { WorkerStatus } from 'const';
+import { Spinner, Typography } from 'kit';
+import { filter, find, flatten, groupBy, map, reduce, sortBy } from 'lodash/fp';
 import { observer } from 'mobx-react-lite';
+import React, { useMemo } from 'react';
+import store from 'store';
 import NodeRow from './NodeRow';
 import css from './styles.module.scss';
 
@@ -28,7 +28,7 @@ const TableHead = () => {
 };
 
 const WorkerNodes = () => {
-  const { delegations } = store;
+  const { delegations, manager } = store;
   const { data } = useRequest<{ items: Worker[] }>(
     {
       url: `${apiURL}/miners/all`,
@@ -38,7 +38,7 @@ const WorkerNodes = () => {
     }
   );
   const items = useMemo(() => {
-    if (!data) return [];
+    if (!data || !manager) return [];
     const items = data.items || [];
     const dataWithAddress = filter('address')(items);
 
@@ -74,7 +74,7 @@ const WorkerNodes = () => {
       groupedByStatus[WorkerStatus.NEW] || [],
       groupedByStatus[WorkerStatus.OFFLINE] || [],
     ]);
-  }, [data, delegations]);
+  }, [data, delegations, manager]);
   if (!data) return <Spinner />;
   return (
     <div>
