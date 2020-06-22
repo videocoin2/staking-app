@@ -1,9 +1,13 @@
 GOOS?=linux
 GOARCH?=amd64
 GCP_PROJECT?=videocoin-network
-NAME=staking-app
+NAME=staking
 VERSION=$$(git describe --abbrev=0)-$$(git rev-parse --abbrev-ref HEAD)-$$(git rev-parse --short HEAD)
 ENV?=dev
+
+REACT_APP_API_URL?=
+REACT_APP_GAS_KEY?=
+REACT_APP_DELEGATIONS_API_URL?=
 
 .PHONY: deploy build
 

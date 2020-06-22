@@ -1,6 +1,6 @@
 #!/bin/bash
 
-readonly CHART_NAME=staking-app
+readonly CHART_NAME=staking
 readonly CHART_DIR=./deploy/helm
 
 CONSUL_ADDR=${CONSUL_ADDR:=127.0.0.1:8500}

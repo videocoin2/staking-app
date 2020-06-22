@@ -1,4 +1,4 @@
-FROM node:10.16.3-alpine as builder
+FROM node:14-alpine as builder
 
 ARG REACT_APP_API_URL
 ARG REACT_APP_GAS_KEY

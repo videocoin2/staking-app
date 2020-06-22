@@ -1,4 +1,4 @@
 apiVersion: v1
-name: staking-app
+name: staking
 version: 0.0.1
 appVersion: 0.0.1

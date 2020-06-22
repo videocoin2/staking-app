@@ -2,7 +2,7 @@ replicasCount: 1
 maxUnavailableCount: 0
 
 image:
-  repository: gcr.io/videocoin-network/staking-app
+  repository: gcr.io/videocoin-network/staking
   tag: latest
   pullPolicy: Always
 
