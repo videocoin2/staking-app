@@ -5,8 +5,8 @@ import {
 } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
 import { ReactComponent as ArrowLeft } from 'assets/arrowLeft.svg';
-import escrowInterface from 'contract/escrow.abi.json';
-import tokenInterface from 'contract/token.abi.json';
+import escrowInterface from 'contract/escrow.json';
+import tokenInterface from 'contract/token.json';
 import { Button, Typography } from 'kit';
 import contract from 'lib/contract';
 import { formatToken, parseToken } from 'lib/units';
@@ -55,14 +55,14 @@ const WorkerPage = () => {
   const { name, address, personalStake = 0 } = selectedWorker;
   const signer = library.getSigner(account);
   const tokenAddress = chainId
-    ? require('contract/token.addr.json')[chainId]?.address
+    ? require('contract/token.json').networks[chainId]?.address
     : '0x0';
-  const token = contract(tokenAddress, tokenInterface, signer);
+  const token = contract(tokenAddress, tokenInterface.abi, signer);
 
   const escrowAddress = chainId
-    ? require('contract/escrow.addr.json')[chainId].address
+    ? require('contract/escrow.json').networks[chainId].address
     : '0x0';
-  const escrow = contract(escrowAddress, escrowInterface, signer);
+  const escrow = contract(escrowAddress, escrowInterface.abi, signer);
 
   const handleBack = () => selectWorker(null);
   const handleStakeChange = (e: ChangeEvent<HTMLInputElement>) => {

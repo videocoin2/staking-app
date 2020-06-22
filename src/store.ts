@@ -2,6 +2,7 @@ import { BigNumberish } from '@ethersproject/bignumber';
 import axios from 'axios';
 import { action, observable, reaction } from 'mobx';
 const DELEGATIONS_API_URL = process.env.REACT_APP_DELEGATIONS_API_URL;
+const RPC_API_URL = process.env.REACT_APP_RPC_API_URL;
 
 export interface Delegate {
   amount: string;
@@ -51,6 +52,7 @@ class Store {
   setVidBalance = (balance: BigNumberish) => {
     this.vidBalance = balance;
   };
+
   @action
   setEthBalance = (balance: BigNumberish) => {
     this.ethBalance = balance;

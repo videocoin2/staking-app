@@ -27,8 +27,8 @@ const Wallet = () => {
   useEffect(() => {
     if (!account || !library || !chainId) return;
 
-    const abi = require('contract/token.abi.json');
-    const address = require('contract/token.addr.json')[chainId]?.address;
+    const abi = require('contract/token.json').abi;
+    const address = require('contract/token.json').networks[chainId]?.address;
     const vid = contract(address, abi, library);
     setToken(vid);
     setAccount(account);
