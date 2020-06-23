@@ -58,7 +58,6 @@ const WorkerPage = () => {
   const { account, library, chainId } = useWeb3React();
   const { name, address, personalStake = 0 } = selectedWorker;
   const signer = library.getSigner(account);
-  console.log(chainId);
   const tokenAddress = chainId
     ? require('contract/token.json').networks[chainId]?.address
     : '0x0';
@@ -232,8 +231,8 @@ const WorkerPage = () => {
         <ConfirmTransactionsModal onClose={closeModal} onNext={handleStake} />
       ),
       [Modal.awaiting]: <AwaitingModal />,
-      [Modal.staking]: <StakingModal />,
-      [Modal.unstaking]: <StakingModal unstake />,
+      [Modal.staking]: <StakingModal waitBlock={CONFIRMATIONS} />,
+      [Modal.unstaking]: <StakingModal unstake waitBlock={CONFIRMATIONS} />,
       [Modal.error]: <ErrorModal onClose={closeModal} />,
       [Modal.successStaking]: <SuccessModal onClose={closeModal} />,
       [Modal.successUnstaking]: <SuccessModal onClose={closeModal} unstake />,
