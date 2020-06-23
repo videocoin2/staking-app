@@ -195,7 +195,7 @@ const WorkerPage = () => {
     justTransfer,
     token,
   ]);
-  const handleUnstake = async () => {
+  const handleUnstake = useCallback(async () => {
     setModal(Modal.awaiting);
     const overrides = {
       gasLimit: GAS_LIMIT,
@@ -225,7 +225,7 @@ const WorkerPage = () => {
       .catch(() => {
         setModal(Modal.error);
       });
-  };
+  }, [account, amount, escrow, gasFee, library, selectedWorker.address]);
   const modals: Record<Modal, ReactNode> = useMemo(
     () => ({
       [Modal.confirm]: (
@@ -244,7 +244,7 @@ const WorkerPage = () => {
         <TermsPolicyModal onClose={closeModal} onAgree={handleUnstake} />
       ),
     }),
-    [handleStake]
+    [handleStake, handleUnstake]
   );
   const isUnstake = stake === StakeType.Unstake;
   const requireStake = () =>
