@@ -11,14 +11,14 @@
   font-size: 8px;
   letter-spacing: 0.04px;
   line-height: 20px;
-  color: #AB88DE;
+  color: #ab88de;
   text-align: center;
   &::before {
     content: '';
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: #0C0417;
+    background: #0c0417;
   }
 }
 
@@ -40,7 +40,7 @@
     tr {
       &:hover {
         td {
-          background: #4E238E;
+          background: #4e238e;
         }
       }
     }
@@ -52,9 +52,9 @@
     }
   }
   td {
-    background: #1B0D2F;
+    background: #1b0d2f;
     padding: 13px 24px;
-    transition: background-color .15s ease-in-out;
+    transition: background-color 0.15s ease-in-out;
     &:first-child {
       border-radius: 4px 0 0 4px;
     }
@@ -62,4 +62,25 @@
       border-radius: 0 4px 4px 0;
     }
   }
+}
+
+.addressCell {
+  display: flex;
+  align-items: center;
+  max-width: 410px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  div {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+
+.genesisBadge {
+  background: #7234c8;
+  border-radius: 2px;
+  padding: 2px 8px;
+  margin-right: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }

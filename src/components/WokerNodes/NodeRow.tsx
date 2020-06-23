@@ -3,6 +3,12 @@ import { formatToken } from 'lib/units';
 import React from 'react';
 import store from '../../store';
 import NodeStatus from './NodeStatus';
+import css from './styles.module.scss';
+
+const GENESIS_POOL_WORKERS = [
+  '0x6EBB37C387f073Db87f53A391a343D18044d534A',
+  '0xa19c77AFD9ff3b698DB46C02e43F828c03dE2A6b',
+];
 
 const NodeRow = ({ node }: { node: any }) => {
   const { status, name, address, personalStake = 0 } = node;
@@ -11,6 +17,7 @@ const NodeRow = ({ node }: { node: any }) => {
   const formattedPersonalStake = parseFloat(formatToken(personalStake)).toFixed(
     2
   );
+  const isGenesis = GENESIS_POOL_WORKERS.includes(address);
   return (
     <tr onClick={handleSelect}>
       <td>
@@ -20,7 +27,14 @@ const NodeRow = ({ node }: { node: any }) => {
         <Typography type="body">{name}</Typography>
       </td>
       <td>
-        <Typography>{address}</Typography>
+        <div className={css.addressCell}>
+          {isGenesis && (
+            <Typography className={css.genesisBadge} type="tiny" theme="white">
+              Genesis Pool
+            </Typography>
+          )}
+          <Typography>{address}</Typography>
+        </div>
       </td>
       <td>
         <Typography tagName="span" type="smallBody">
