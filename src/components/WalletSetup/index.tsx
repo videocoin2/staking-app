@@ -1,9 +1,9 @@
 import React from 'react';
-import { Typography, Button } from 'ui-kit';
-import css from './styles.module.scss';
+import { Button, Typography } from 'ui-kit';
+import Grid from '../Grid';
 import img from './assets/img.jpg';
 import img2x from './assets/img@2x.jpg';
-import Grid from '../Grid';
+import css from './styles.module.scss';
 
 const WalletSetup = () => {
   const onClick = () => ethereum.enable();
@@ -24,7 +24,7 @@ const WalletSetup = () => {
           <Button onClick={onClick}>Finish Setup</Button>
         </div>
         <a
-          href="https://tokenmarket.net/what-is/how-to-install-and-setup-metamask/"
+          href="https://metamask.zendesk.com/hc/en-us/articles/360015488971-New-to-MetaMask-Learn-How-to-Setup-MetaMask-the-First-Time"
           target="_blank"
           rel="noopener noreferrer"
           className={css.docLink}
