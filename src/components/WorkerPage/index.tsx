@@ -150,10 +150,11 @@ const WorkerPage = () => {
             throw new Error(`Transaction ${receipt.transactionHash} failed`);
           }
           localStorage.removeItem(TRANSACTION_KEY);
-
+          setModal(Modal.awaiting);
           return escrow.transfer(address, parseToken(amount), overrides);
         })
         .then((transaction: TransactionResponse) => {
+          setModal(Modal.staking);
           localStorage.setItem(TRANSACTION_KEY, transaction.hash);
           return library.waitForTransaction(transaction.hash, CONFIRMATIONS);
         })

@@ -11,12 +11,16 @@ const StakingModal = ({
   waitBlock?: number;
 }) => {
   const { library } = useWeb3React();
-  const [blockConfirmations, setBlockConfirmations] = useState(0);
+  const [blockNumber, setBlockNumber] = useState(0);
+  const [confirmations, setConfirmations] = useState(0);
   useEffect(() => {
-    library.on('block', () => {
-      setBlockConfirmations(blockConfirmations + 1);
+    library.on('block', (currentBlockNumber: number) => {
+      if (blockNumber !== currentBlockNumber) {
+        setBlockNumber(blockNumber);
+        setConfirmations(confirmations + 1);
+      }
     });
-  }, [library, blockConfirmations]);
+  }, [library, confirmations, blockNumber]);
   useEffect(() => {
     return () => {
       library.off('block');
@@ -32,7 +36,7 @@ const StakingModal = ({
           Transactions are being sent through MetaMask
         </Typography>
         <Typography type="smallBodyThin">
-          Blocks to confirm transaction {blockConfirmations}/{waitBlock}
+          {confirmations}/{waitBlock} blocks to confirm transaction
         </Typography>
       </div>
     </Modal>
