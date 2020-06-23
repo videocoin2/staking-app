@@ -3,6 +3,7 @@ FROM node:14-alpine as builder
 ARG REACT_APP_API_URL
 ARG REACT_APP_GAS_KEY
 ARG REACT_APP_DELEGATIONS_API_URL
+ARG REACT_APP_NETWORKS
 
 RUN apk add --no-cache --virtual .gyp \
         build-base \

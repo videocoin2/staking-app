@@ -8,6 +8,7 @@ ENV?=dev
 REACT_APP_API_URL?=
 REACT_APP_GAS_KEY?=
 REACT_APP_DELEGATIONS_API_URL?=
+REACT_APP_NETWORKS?=
 
 .PHONY: deploy build
 
@@ -28,6 +29,7 @@ docker-build:
 	--build-arg REACT_APP_API_URL=${REACT_APP_API_URL} \
 	--build-arg REACT_APP_GAS_KEY=${REACT_APP_GAS_KEY} \
 	--build-arg REACT_APP_DELEGATIONS_API_URL=${REACT_APP_DELEGATIONS_API_URL} \
+	--build-arg REACT_APP_NETWORKS=${REACT_APP_NETWORKS} \
 	-f Dockerfile .
 
 docker-push:
