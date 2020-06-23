@@ -7,7 +7,6 @@ import { useWeb3React } from '@web3-react/core';
 import { ReactComponent as ArrowLeft } from 'assets/arrowLeft.svg';
 import escrowInterface from 'contract/escrow.json';
 import tokenInterface from 'contract/token.json';
-import { Button, Typography } from 'ui-kit';
 import contract from 'lib/contract';
 import { formatToken, parseToken } from 'lib/units';
 import { observer } from 'mobx-react-lite';
@@ -20,6 +19,7 @@ import React, {
   useState,
 } from 'react';
 import store from 'store';
+import { Button, Typography } from 'ui-kit';
 import { TRANSACTION_KEY } from '../../const';
 import AmountInput from './AmountInput';
 import AwaitingModal from './AwaitingModal';
@@ -33,6 +33,7 @@ import SuccessModal from './SuccessModal';
 import TermsPolicyModal from './TermsPolicyModal';
 
 const GAS_LIMIT = 800000;
+const CONFIRMATIONS = 8;
 
 enum Modal {
   confirm,
@@ -79,7 +80,10 @@ const WorkerPage = () => {
   useEffect(() => {
     if (localStorage.getItem(TRANSACTION_KEY)) {
       library
-        .waitForTransaction(localStorage.getItem(TRANSACTION_KEY))
+        .waitForTransaction(
+          localStorage.getItem(TRANSACTION_KEY),
+          CONFIRMATIONS
+        )
         .then((receipt: TransactionReceipt) => {
           if (receipt.status === 0) {
             throw new Error(`Transaction ${receipt.transactionHash} failed`);
@@ -103,7 +107,7 @@ const WorkerPage = () => {
         .then((transaction: TransactionResponse) => {
           setModal(Modal.staking);
           localStorage.setItem(TRANSACTION_KEY, transaction.hash);
-          return library.waitForTransaction(transaction.hash);
+          return library.waitForTransaction(transaction.hash, CONFIRMATIONS);
         })
         .then((receipt: TransactionReceipt) => {
           if (receipt.status === 0) {
@@ -140,7 +144,7 @@ const WorkerPage = () => {
         .then((transaction: TransactionResponse) => {
           setModal(Modal.staking);
           localStorage.setItem(TRANSACTION_KEY, transaction.hash);
-          return library.waitForTransaction(transaction.hash);
+          return library.waitForTransaction(transaction.hash, CONFIRMATIONS);
         })
         .then(async (receipt: TransactionReceipt) => {
           if (receipt.status === 0) {
@@ -152,7 +156,7 @@ const WorkerPage = () => {
         })
         .then((transaction: TransactionResponse) => {
           localStorage.setItem(TRANSACTION_KEY, transaction.hash);
-          return library.waitForTransaction(transaction.hash);
+          return library.waitForTransaction(transaction.hash, CONFIRMATIONS);
         })
         .then((receipt: TransactionReceipt) => {
           if (receipt.status === 0) {
@@ -209,7 +213,7 @@ const WorkerPage = () => {
       )
       .then((transaction: TransactionResponse) => {
         setModal(Modal.unstaking);
-        return library.waitForTransaction(transaction.hash);
+        return library.waitForTransaction(transaction.hash, CONFIRMATIONS);
       })
       .then((receipt: TransactionReceipt) => {
         if (receipt.status === 0) {

@@ -1,16 +1,16 @@
 import { formatEther } from '@ethersproject/units';
 import { useWeb3React } from '@web3-react/core';
-import { Typography } from 'ui-kit';
 import contract from 'lib/contract';
 import { formatToken } from 'lib/units';
 import { observer } from 'mobx-react-lite';
 import React, { useCallback, useEffect } from 'react';
 import store from 'store';
+import { Typography } from 'ui-kit';
+import { BALANCE_FETCH_INTERVAL } from '../../const';
+import useInterval from '../../hooks/useInterval';
 import logo from './assets/logo.png';
 import logo2x from './assets/logo@2x.png';
 import css from './styles.module.scss';
-import useInterval from '../../hooks/useInterval';
-import { BALANCE_FETCH_INTERVAL } from '../../const';
 
 const Wallet = () => {
   const {
@@ -21,6 +21,7 @@ const Wallet = () => {
     vidBalance,
     setToken,
     setAccount,
+    fetchDelegations,
     token,
     totalStake,
   } = store;
@@ -45,7 +46,16 @@ const Wallet = () => {
     if (!account || !library || !token || !chainId) return;
     getTokenBalance();
     getEthBalance();
-  }, [account, chainId, getEthBalance, getTokenBalance, library, token]);
+    fetchDelegations();
+  }, [
+    account,
+    chainId,
+    getEthBalance,
+    getTokenBalance,
+    fetchDelegations,
+    library,
+    token,
+  ]);
   useEffect(() => {
     if (!account || !library || !chainId) return;
     const abi = require('contract/token.json').abi;
