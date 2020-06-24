@@ -52,7 +52,9 @@ const WorkerNodes = () => {
     const items = data.items || [];
     const dataWithAddress = filter(
       // eslint-disable-next-line
-      ({ is_internal, address }) => !is_internal && address
+      ({ is_internal, address, worker_state }) =>
+        // eslint-disable-next-line
+        !is_internal && address && worker_state === 'BONDED'
     )(items);
 
     const splitData = reduce(
