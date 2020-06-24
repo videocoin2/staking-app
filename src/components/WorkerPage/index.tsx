@@ -281,7 +281,8 @@ const WorkerPage = () => {
   const formattedTotalValue = parseFloat(
     formatToken(isUnstake ? personalStake : vidBalance)
   ).toFixed(2);
-  const disabled = parseFloat(amount) <= 0 || +amount > +formattedTotalValue;
+  const disabled =
+    !amount || parseFloat(amount) <= 0 || +amount > +formattedTotalValue;
   return (
     <div className={css.root}>
       <button type="button" className={css.backBtn} onClick={handleBack}>
