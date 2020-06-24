@@ -1,20 +1,20 @@
-import React from 'react';
-import { Typography, Spinner } from 'ui-kit';
+import useRequest from 'api/useRequest';
+import { WorkerStatus } from 'const';
 import {
-  reverse,
   compose,
-  find,
   filter,
-  reduce,
-  map,
+  find,
   flatten,
   groupBy,
+  map,
+  reduce,
+  reverse,
   sortBy,
 } from 'lodash/fp';
-import { WorkerStatus } from 'const';
-import useRequest from 'api/useRequest';
-import store from 'store';
 import { observer } from 'mobx-react-lite';
+import React from 'react';
+import store from 'store';
+import { Spinner, Typography } from 'ui-kit';
 import NodeRow from './NodeRow';
 import css from './styles.module.scss';
 
@@ -50,7 +50,11 @@ const WorkerNodes = () => {
   const items = () => {
     if (!data) return [];
     const items = data.items || [];
-    const dataWithAddress = filter('address')(items);
+    let dataWithAddress = filter('address')(items);
+
+    dataWithAddress = filter((e: any) => e.is_internal === false)(
+      dataWithAddress
+    );
 
     const splitData = reduce(
       (acc: any, { address, ...el }: any) => {

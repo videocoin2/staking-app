@@ -9,6 +9,7 @@ import escrowInterface from 'contract/escrow.json';
 import tokenInterface from 'contract/token.json';
 import contract from 'lib/contract';
 import { formatToken, parseToken } from 'lib/units';
+import { find } from 'lodash/fp';
 import { observer } from 'mobx-react-lite';
 import React, {
   ChangeEvent,
@@ -31,7 +32,6 @@ import StakingModal from './StakingModal';
 import css from './styles.module.scss';
 import SuccessModal from './SuccessModal';
 import TermsPolicyModal from './TermsPolicyModal';
-import { find } from 'lodash/fp';
 
 const GAS_LIMIT = 800000;
 const CONFIRMATIONS = 8;
@@ -136,7 +136,6 @@ const WorkerPage = () => {
   const allowanceAndTransfer = useCallback(
     (diff: BigNumber, overrides: any) => {
       updateCurrentStake();
-      return;
       let allowancePromise;
       if (diff.lt(0)) {
         allowancePromise = token.increaseApproval(
