@@ -282,7 +282,7 @@ const WorkerPage = () => {
       />
       <GasFee value={gasFee} onChange={setGasFee} />
       <div className={css.submitBtn}>
-        <Button disabled={!amount} onClick={requireStake}>
+        <Button disabled={!parseFloat(amount)} onClick={requireStake}>
           {isUnstake ? 'Unstake' : 'Stake'} Tokens
         </Button>
       </div>
