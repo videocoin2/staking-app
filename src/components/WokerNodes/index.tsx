@@ -1,5 +1,5 @@
 import useRequest from 'api/useRequest';
-import { WorkerStatus } from 'const';
+import { GENESIS_POOL_WORKERS, WorkerStatus } from 'const';
 import {
   compose,
   filter,
@@ -50,32 +50,41 @@ const WorkerNodes = () => {
   const items = () => {
     if (!data) return [];
     const items = data.items || [];
-    let dataWithAddress = filter('address')(items);
-
-    dataWithAddress = filter((e: any) => e.is_internal === false)(
-      dataWithAddress
-    );
+    const dataWithAddress = filter(
+      // eslint-disable-next-line
+      ({ is_internal, address }) => !is_internal && address
+    )(items);
 
     const splitData = reduce(
       (acc: any, { address, ...el }: any) => {
         const delegate = find({ delegatee: address }, delegations);
+        const isGenesis = GENESIS_POOL_WORKERS.includes(address);
+        if (isGenesis) {
+          acc.genesisPool.push({
+            ...el,
+            address,
+            personalStake: delegate?.amount ?? 0,
+          });
+          return acc;
+        }
         if (delegate) {
           acc.withStake.push({
             ...el,
             address,
             personalStake: delegate.amount,
           });
-        } else {
-          acc.withoutStake.push({
-            ...el,
-            address,
-          });
+          return acc;
         }
+        acc.withoutStake.push({
+          ...el,
+          address,
+        });
         return acc;
       },
       {
         withStake: [],
         withoutStake: [],
+        genesisPool: [],
       }
     )(dataWithAddress);
 
@@ -85,6 +94,7 @@ const WorkerNodes = () => {
       sortBy('personalStake')
     )(splitData.withStake);
     return flatten([
+      splitData.genesisPool,
       sortedPersonalStake,
       groupedByStatus[WorkerStatus.BUSY] || [],
       groupedByStatus[WorkerStatus.IDLE] || [],

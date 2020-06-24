@@ -21,7 +21,7 @@ import React, {
 } from 'react';
 import store from 'store';
 import { Button, Typography } from 'ui-kit';
-import { TRANSACTION_KEY } from '../../const';
+import { GENESIS_POOL_WORKERS, TRANSACTION_KEY } from '../../const';
 import AmountInput from './AmountInput';
 import AwaitingModal from './AwaitingModal';
 import ConfirmTransactionsModal from './ConfirmTransactionsModal';
@@ -68,6 +68,7 @@ const WorkerPage = () => {
     ? require('contract/escrow.json').networks[chainId].address
     : '0x0';
   const escrow = contract(escrowAddress, escrowInterface.abi, signer);
+  const isGenesis = GENESIS_POOL_WORKERS.includes(address);
 
   const handleBack = () => selectWorker(null);
   const handleStakeChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -100,12 +101,14 @@ const WorkerPage = () => {
     setModal(Modal.confirm);
   };
 
-  const updateCurrentStake = async () => {
-    const res = await fetchDelegations();
-    const delegate = find({ delegatee: address }, res.data.delegations);
-    if (delegate) {
-      selectWorker({ ...selectedWorker, personalStake: delegate.amount });
-    }
+  const updateCurrentStake = () => {
+    setTimeout(async () => {
+      const res = await fetchDelegations();
+      const delegate = find({ delegatee: address }, res.data.delegations);
+      if (delegate) {
+        selectWorker({ ...selectedWorker, personalStake: delegate.amount });
+      }
+    }, 1000);
   };
 
   const justTransfer = useCallback(
@@ -251,10 +254,18 @@ const WorkerPage = () => {
       [Modal.successStaking]: <SuccessModal onClose={closeModal} />,
       [Modal.successUnstaking]: <SuccessModal onClose={closeModal} unstake />,
       [Modal.agreementStake]: (
-        <TermsPolicyModal onClose={closeModal} onAgree={prepareStake} />
+        <TermsPolicyModal
+          onClose={closeModal}
+          onAgree={prepareStake}
+          isGenesis={isGenesis}
+        />
       ),
       [Modal.agreementUnstake]: (
-        <TermsPolicyModal onClose={closeModal} onAgree={handleUnstake} />
+        <TermsPolicyModal
+          onClose={closeModal}
+          onAgree={handleUnstake}
+          isGenesis={isGenesis}
+        />
       ),
     }),
     [handleStake, handleUnstake]

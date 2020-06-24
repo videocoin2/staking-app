@@ -4,11 +4,7 @@ import React from 'react';
 import store from '../../store';
 import NodeStatus from './NodeStatus';
 import css from './styles.module.scss';
-
-const GENESIS_POOL_WORKERS = [
-  '0x6EBB37C387f073Db87f53A391a343D18044d534A',
-  '0xa19c77AFD9ff3b698DB46C02e43F828c03dE2A6b',
-];
+import { GENESIS_POOL_WORKERS } from '../../const';
 
 const NodeRow = ({ node }: { node: any }) => {
   const { status, name, address, personalStake = 0 } = node;
