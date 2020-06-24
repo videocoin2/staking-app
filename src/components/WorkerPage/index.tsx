@@ -281,6 +281,7 @@ const WorkerPage = () => {
   const formattedTotalValue = parseFloat(
     formatToken(isUnstake ? personalStake : vidBalance)
   ).toFixed(2);
+  const disabled = parseFloat(amount) <= 0 || +amount > +formattedTotalValue;
   return (
     <div className={css.root}>
       <button type="button" className={css.backBtn} onClick={handleBack}>
@@ -309,10 +310,7 @@ const WorkerPage = () => {
       />
       <GasFee value={gasFee} onChange={setGasFee} />
       <div className={css.submitBtn}>
-        <Button
-          disabled={!parseFloat(amount) || +amount > +formattedTotalValue}
-          onClick={requireStake}
-        >
+        <Button disabled={disabled} onClick={requireStake}>
           {isUnstake ? 'Unstake' : 'Stake'} Tokens
         </Button>
       </div>

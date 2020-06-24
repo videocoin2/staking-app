@@ -43,7 +43,7 @@ const AmountInput = ({
   };
   const isUnstake = stake === StakeType.Unstake;
   const formattedTotalValue = parseFloat(formatToken(totalValue)).toFixed(2);
-
+  const error = (value && +value <= 0) || +value > +formattedTotalValue;
   return (
     <div className={css.amount}>
       <div className={css.amountAvailable}>
@@ -60,8 +60,9 @@ const AmountInput = ({
         onChange={handleChange}
         label={`Amount To ${isUnstake ? 'Unstake' : 'Stake'}`}
         postfix={() => <PercentAmount onClick={handlePercentClick} />}
-        error={+value > +formattedTotalValue}
+        error={error}
         max={+formattedTotalValue}
+        min={0}
       />
     </div>
   );
