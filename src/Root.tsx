@@ -12,6 +12,7 @@ import WalletSetup from 'components/WalletSetup';
 import { useEagerConnect, useInactiveListener } from './lib/hooks';
 import { AbstractConnector } from '@web3-react/abstract-connector';
 import { injected } from './lib/connectors';
+import SwitchNetwork from './components/SwitchNetwork';
 
 const connectorsByName: { [name: string]: AbstractConnector } = {
   Injected: injected,
@@ -22,7 +23,9 @@ const currentConnector = connectorsByName[name];
 
 function Root() {
   const { isMetamaskInstalled } = store;
-  const { connector, activate, account } = useWeb3React<Web3Provider>();
+  const { connector, activate, account, chainId } = useWeb3React<
+    Web3Provider
+  >();
   const triedEager = useEagerConnect();
   const [activatingConnector, setActivatingConnector] = useState<
     AbstractConnector
@@ -41,6 +44,9 @@ function Root() {
   const renderBody = () => {
     if (!isMetamaskInstalled) {
       return <GettingStarted />;
+    }
+    if (!chainId) {
+      return <SwitchNetwork />;
     }
     if (!account) {
       return <WalletSetup />;

@@ -83,6 +83,13 @@ const Wallet = () => {
         </Typography>
       );
     }
+    if (!chainId) {
+      return (
+        <Typography type="smallBodyThin" theme="sunkissed">
+          Switch to Main Network
+        </Typography>
+      );
+    }
     if (account) {
       return <Typography type="smallBodyThin">{account}</Typography>;
     }
