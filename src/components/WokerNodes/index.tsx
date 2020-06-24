@@ -1,6 +1,16 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Typography, Spinner } from 'ui-kit';
-import { find, filter, reduce, map, flatten, groupBy, sortBy } from 'lodash/fp';
+import {
+  reverse,
+  compose,
+  find,
+  filter,
+  reduce,
+  map,
+  flatten,
+  groupBy,
+  sortBy,
+} from 'lodash/fp';
 import { WorkerStatus } from 'const';
 import useRequest from 'api/useRequest';
 import store from 'store';
@@ -37,7 +47,7 @@ const WorkerNodes = () => {
       refreshInterval: POLL_TIMEOUT,
     }
   );
-  const items = useMemo(() => {
+  const items = () => {
     if (!data) return [];
     const items = data.items || [];
     const dataWithAddress = filter('address')(items);
@@ -66,7 +76,10 @@ const WorkerNodes = () => {
     )(dataWithAddress);
 
     const groupedByStatus = groupBy('status')(splitData.withoutStake);
-    const sortedPersonalStake = sortBy('personalStake')(splitData.withStake);
+    const sortedPersonalStake = compose(
+      reverse,
+      sortBy('personalStake')
+    )(splitData.withStake);
     return flatten([
       sortedPersonalStake,
       groupedByStatus[WorkerStatus.BUSY] || [],
@@ -74,7 +87,7 @@ const WorkerNodes = () => {
       groupedByStatus[WorkerStatus.NEW] || [],
       groupedByStatus[WorkerStatus.OFFLINE] || [],
     ]);
-  }, [data, delegations]);
+  };
   if (!data) return <Spinner />;
   return (
     <div>
@@ -84,7 +97,7 @@ const WorkerNodes = () => {
       </Typography>
       <table className={css.table}>
         <TableHead />
-        <tbody>{map(renderNode)(items)}</tbody>
+        <tbody>{map(renderNode)(items())}</tbody>
       </table>
     </div>
   );

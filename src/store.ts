@@ -75,6 +75,7 @@ class Store {
     const res = await axios(`${DELEGATIONS_API_URL}/${this.account}`);
     this.delegations.replace(res.data.delegations);
     this.totalStake = res.data.total;
+    return res;
   };
 }
 

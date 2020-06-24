@@ -31,6 +31,7 @@ import StakingModal from './StakingModal';
 import css from './styles.module.scss';
 import SuccessModal from './SuccessModal';
 import TermsPolicyModal from './TermsPolicyModal';
+import { find } from 'lodash/fp';
 
 const GAS_LIMIT = 800000;
 const CONFIRMATIONS = 8;
@@ -54,7 +55,7 @@ const WorkerPage = () => {
   const [gasFee, setGasFee] = useState(1);
   const [modal, setModal] = useState<Modal | null>(null);
   const closeModal = () => setModal(null);
-  const { selectedWorker, selectWorker, vidBalance } = store;
+  const { selectedWorker, selectWorker, vidBalance, fetchDelegations } = store;
   const { account, library, chainId } = useWeb3React();
   const { name, address, personalStake = 0 } = selectedWorker;
   const signer = library.getSigner(account);
@@ -99,6 +100,14 @@ const WorkerPage = () => {
     setModal(Modal.confirm);
   };
 
+  const updateCurrentStake = async () => {
+    const res = await fetchDelegations();
+    const delegate = find({ delegatee: address }, res.data.delegations);
+    if (delegate) {
+      selectWorker({ ...selectedWorker, personalStake: delegate.amount });
+    }
+  };
+
   const justTransfer = useCallback(
     (overrides: any) => {
       escrow
@@ -114,6 +123,7 @@ const WorkerPage = () => {
           }
           localStorage.removeItem(TRANSACTION_KEY);
           setModal(Modal.successStaking);
+          updateCurrentStake();
         })
         .catch(() => {
           localStorage.removeItem(TRANSACTION_KEY);
@@ -125,6 +135,8 @@ const WorkerPage = () => {
 
   const allowanceAndTransfer = useCallback(
     (diff: BigNumber, overrides: any) => {
+      updateCurrentStake();
+      return;
       let allowancePromise;
       if (diff.lt(0)) {
         allowancePromise = token.increaseApproval(
@@ -164,6 +176,7 @@ const WorkerPage = () => {
           }
           localStorage.removeItem(TRANSACTION_KEY);
           setModal(Modal.successStaking);
+          updateCurrentStake();
         })
         .catch(() => {
           setModal(Modal.error);
@@ -221,6 +234,7 @@ const WorkerPage = () => {
           throw new Error(`Transaction ${receipt.transactionHash} failed`);
         }
         setModal(Modal.successUnstaking);
+        updateCurrentStake();
       })
       .catch(() => {
         setModal(Modal.error);
