@@ -10,7 +10,7 @@ const SwitchNetwork = () => {
     <div>
       <Typography type="title">Switch Network</Typography>
       <Typography type="subtitleThin">
-        Switch MetaMask to use the Main Etherium Network
+        Switch MetaMask to use the Main Ethereum Network
       </Typography>
       <div className={css.img}>
         <img src={img} srcSet={`${img2x} 2x`} alt="" />
@@ -19,7 +19,7 @@ const SwitchNetwork = () => {
         <div className={css.installExtension}>
           <Typography align="center" type="subtitleThin">
             Open the MetaMask extension and click the drop-down arrow
-            <br /> shown above to switch to the Main Etherium Network.
+            <br /> shown above to switch to the Main Ethereum Network.
           </Typography>
         </div>
       </Grid>
