@@ -6,9 +6,11 @@ VERSION=$$(git describe --abbrev=0)-$$(git rev-parse --abbrev-ref HEAD)-$$(git r
 ENV?=dev
 
 REACT_APP_API_URL?=
-REACT_APP_GAS_KEY?=
+REACT_APP_GAS_KEY?=c2babe0568556b4b93165dde81a0348cb5e4eb7d6f07b9f1c0be19add54b
 REACT_APP_DELEGATIONS_API_URL?=
 REACT_APP_NETWORKS?=
+REACT_APP_TOKEN_ADDRESS?=
+REACT_APP_ESCROW_ADDRESS?=
 
 .PHONY: deploy build
 
@@ -30,6 +32,8 @@ docker-build:
 	--build-arg REACT_APP_GAS_KEY=${REACT_APP_GAS_KEY} \
 	--build-arg REACT_APP_DELEGATIONS_API_URL=${REACT_APP_DELEGATIONS_API_URL} \
 	--build-arg REACT_APP_NETWORKS=${REACT_APP_NETWORKS} \
+	--build-arg REACT_APP_TOKEN_ADDRESS=${REACT_APP_TOKEN_ADDRESS} \
+	--build-arg REACT_APP_ESCROW_ADDRESS=${REACT_APP_ESCROW_ADDRESS} \
 	-f Dockerfile .
 
 docker-push:
