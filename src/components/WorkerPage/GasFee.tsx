@@ -1,8 +1,8 @@
 import { formatUnits } from '@ethersproject/units';
 import fetchGasPrices from 'api/fetchGasPrice';
 import useToggle from 'hooks/useToggle';
-import { Typography } from 'ui-kit';
 import React, { useCallback, useEffect, useState } from 'react';
+import { Typography } from 'ui-kit';
 import GasFeeModal from './GasFeeModal';
 import css from './styles.module.scss';
 
@@ -18,7 +18,7 @@ const GasFee = ({
   const updateGasPrices = useCallback(async () => {
     const prices = await fetchGasPrices();
     setGasPrices(prices);
-    onChange(prices.medium);
+    onChange(prices.high);
   }, [onChange]);
   useEffect((): any => {
     updateGasPrices();
