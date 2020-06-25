@@ -33,6 +33,8 @@ import css from './styles.module.scss';
 import SuccessModal from './SuccessModal';
 import TermsPolicyModal from './TermsPolicyModal';
 
+const REACT_APP_TOKEN_ADDRESS = process.env.REACT_APP_TOKEN_ADDRESS;
+const REACT_APP_ESCROW_ADDRESS = process.env.REACT_APP_ESCROW_ADDRESS;
 const GAS_LIMIT = 800000;
 const CONFIRMATIONS = 8;
 
@@ -59,15 +61,13 @@ const WorkerPage = () => {
   const { account, library, chainId } = useWeb3React();
   const { name, address, personalStake = 0 } = selectedWorker;
   const signer = library.getSigner(account);
-  const tokenAddress = chainId
-    ? require('contract/token.json').networks[chainId]?.address
-    : '0x0';
-  const token = contract(tokenAddress, tokenInterface.abi, signer);
+  const token = contract(REACT_APP_TOKEN_ADDRESS, tokenInterface.abi, signer);
 
-  const escrowAddress = chainId
-    ? require('contract/escrow.json').networks[chainId].address
-    : '0x0';
-  const escrow = contract(escrowAddress, escrowInterface.abi, signer);
+  const escrow = contract(
+    REACT_APP_ESCROW_ADDRESS,
+    escrowInterface.abi,
+    signer
+  );
   const isGenesis = GENESIS_POOL_WORKERS.includes(address);
 
   const handleBack = () => selectWorker(null);
@@ -142,13 +142,13 @@ const WorkerPage = () => {
       let allowancePromise;
       if (diff.lt(0)) {
         allowancePromise = token.increaseApproval(
-          escrowAddress,
+          REACT_APP_ESCROW_ADDRESS,
           diff.mul(-1),
           overrides
         );
       } else if (diff.gt(0)) {
         allowancePromise = token.increaseApproval(
-          escrowAddress,
+          REACT_APP_ESCROW_ADDRESS,
           diff,
           overrides
         );
@@ -185,7 +185,7 @@ const WorkerPage = () => {
           localStorage.removeItem(TRANSACTION_KEY);
         });
     },
-    [address, amount, escrow, escrowAddress, library, token]
+    [address, amount, escrow, library, token]
   );
 
   const handleStake = useCallback(async () => {
@@ -194,22 +194,14 @@ const WorkerPage = () => {
       gasPrice: gasFee * 1e9,
     };
     setModal(Modal.awaiting);
-    const allowed = await token.allowance(account, escrowAddress);
+    const allowed = await token.allowance(account, REACT_APP_ESCROW_ADDRESS);
     const diff = allowed.sub(parseToken(amount));
     if (diff.eq(0)) {
       justTransfer(overrides);
     } else {
       allowanceAndTransfer(diff, overrides);
     }
-  }, [
-    account,
-    allowanceAndTransfer,
-    amount,
-    escrowAddress,
-    gasFee,
-    justTransfer,
-    token,
-  ]);
+  }, [account, allowanceAndTransfer, amount, gasFee, justTransfer, token]);
   const handleUnstake = useCallback(async () => {
     setModal(Modal.awaiting);
     const overrides = {

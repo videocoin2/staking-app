@@ -11,6 +11,7 @@ import useInterval from '../../hooks/useInterval';
 import logo from './assets/logo.png';
 import logo2x from './assets/logo@2x.png';
 import css from './styles.module.scss';
+const REACT_APP_TOKEN_ADDRESS = process.env.REACT_APP_TOKEN_ADDRESS;
 
 const Wallet = () => {
   const {
@@ -59,8 +60,7 @@ const Wallet = () => {
   useEffect(() => {
     if (!account || !library || !chainId) return;
     const abi = require('contract/token.json').abi;
-    const address = require('contract/token.json').networks[chainId]?.address;
-    const vid = contract(address, abi, library);
+    const vid = contract(REACT_APP_TOKEN_ADDRESS, abi, library);
     setToken(vid);
     setAccount(account);
   }, [account, chainId, library, setAccount, setToken]);
