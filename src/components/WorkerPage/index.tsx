@@ -102,13 +102,16 @@ const WorkerPage = () => {
   };
 
   const updateCurrentStake = () => {
-    setTimeout(async () => {
-      const res = await fetchDelegations();
-      const delegate = find({ delegatee: address }, res.data.delegations);
-      if (delegate) {
-        selectWorker({ ...selectedWorker, personalStake: delegate.amount });
-      }
-    }, 1000);
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        const res = await fetchDelegations();
+        const delegate = find({ delegatee: address }, res.data.delegations);
+        if (delegate) {
+          selectWorker({ ...selectedWorker, personalStake: delegate.amount });
+        }
+        resolve();
+      }, 5000);
+    });
   };
 
   const justTransfer = useCallback(
@@ -120,13 +123,13 @@ const WorkerPage = () => {
           localStorage.setItem(TRANSACTION_KEY, transaction.hash);
           return library.waitForTransaction(transaction.hash, CONFIRMATIONS);
         })
-        .then((receipt: TransactionReceipt) => {
+        .then(async (receipt: TransactionReceipt) => {
           if (receipt.status === 0) {
             throw new Error(`Transaction ${receipt.transactionHash} failed`);
           }
+          await updateCurrentStake();
           localStorage.removeItem(TRANSACTION_KEY);
           setModal(Modal.successStaking);
-          updateCurrentStake();
         })
         .catch(() => {
           localStorage.removeItem(TRANSACTION_KEY);
@@ -172,13 +175,13 @@ const WorkerPage = () => {
           localStorage.setItem(TRANSACTION_KEY, transaction.hash);
           return library.waitForTransaction(transaction.hash, CONFIRMATIONS);
         })
-        .then((receipt: TransactionReceipt) => {
+        .then(async (receipt: TransactionReceipt) => {
           if (receipt.status === 0) {
             throw new Error(`Transaction ${receipt.transactionHash} failed`);
           }
+          await updateCurrentStake();
           localStorage.removeItem(TRANSACTION_KEY);
           setModal(Modal.successStaking);
-          updateCurrentStake();
         })
         .catch(() => {
           setModal(Modal.error);
@@ -222,13 +225,13 @@ const WorkerPage = () => {
         setModal(Modal.unstaking);
         return library.waitForTransaction(transaction.hash, CONFIRMATIONS);
       })
-      .then((receipt: TransactionReceipt) => {
+      .then(async (receipt: TransactionReceipt) => {
         if (receipt.status === 0) {
           setModal(Modal.error);
           throw new Error(`Transaction ${receipt.transactionHash} failed`);
         }
+        await updateCurrentStake();
         setModal(Modal.successUnstaking);
-        updateCurrentStake();
       })
       .catch(() => {
         setModal(Modal.error);
