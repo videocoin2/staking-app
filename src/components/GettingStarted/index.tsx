@@ -36,7 +36,7 @@ const GettingStarted = () => {
           </div>
         </div>
         <a
-          href="https://tokenmarket.net/what-is/how-to-install-and-setup-metamask/"
+          href="https://docs.videocoin.network/staking-with-the-genesis-staking-program"
           target="_blank"
           rel="noopener noreferrer"
           className={css.docLink}
@@ -46,7 +46,7 @@ const GettingStarted = () => {
           </Typography>
         </a>
         <a
-          href="https://tokenmarket.net/what-is/how-to-connect-ledger-and-metamask/"
+          href="https://metamask.zendesk.com/hc/en-us/articles/360020394612-How-to-connect-a-Trezor-or-Ledger-Hardware-Wallet"
           target="_blank"
           rel="noopener noreferrer"
           className={css.docLink}
