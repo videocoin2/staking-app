@@ -7,7 +7,7 @@ const fetchGasPrices = async () => {
   );
   const { data } = res;
   return {
-    high: data.fast / 10 + 10,
+    high: data.fast / 10,
     low: data.safeLow / 10,
     medium: data.average / 10,
   };

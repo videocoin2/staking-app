@@ -18,7 +18,7 @@ const GasFee = ({
   const updateGasPrices = useCallback(async () => {
     const prices = await fetchGasPrices();
     setGasPrices(prices);
-    onChange(prices.high);
+    onChange(prices.medium);
   }, [onChange]);
   useEffect((): any => {
     updateGasPrices();
