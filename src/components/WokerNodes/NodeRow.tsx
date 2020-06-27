@@ -1,18 +1,17 @@
-import { Typography } from 'ui-kit';
 import { formatToken } from 'lib/units';
+import { toFixedNoRound } from 'lib/utils';
 import React from 'react';
+import { Typography } from 'ui-kit';
+import { GENESIS_POOL_WORKERS } from '../../const';
 import store from '../../store';
 import NodeStatus from './NodeStatus';
 import css from './styles.module.scss';
-import { GENESIS_POOL_WORKERS } from '../../const';
 
 const NodeRow = ({ node }: { node: any }) => {
   const { status, name, address, personalStake = 0 } = node;
   const { selectWorker } = store;
   const handleSelect = () => selectWorker(node);
-  const formattedPersonalStake = parseFloat(formatToken(personalStake)).toFixed(
-    2
-  );
+  const formattedPersonalStake = toFixedNoRound(formatToken(personalStake), 2);
   const isGenesis = GENESIS_POOL_WORKERS.includes(address);
   return (
     <tr onClick={handleSelect}>

@@ -1,8 +1,8 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
-import { Input, Typography } from 'ui-kit';
 import { formatToken } from 'lib/units';
 import { observer } from 'mobx-react-lite';
 import React, { FormEvent } from 'react';
+import { Input, Typography } from 'ui-kit';
 import { StakeType } from './StakeToggle';
 import css from './styles.module.scss';
 
@@ -36,13 +36,11 @@ const AmountInput = ({
   };
   const handlePercentClick = (value: number) => {
     const percentValue = BigNumber.from(totalValue).div(100).mul(value);
-    const formattedPercentValue = parseFloat(formatToken(percentValue)).toFixed(
-      2
-    );
+    const formattedPercentValue = formatToken(percentValue);
     onChange(formattedPercentValue);
   };
   const isUnstake = stake === StakeType.Unstake;
-  const formattedTotalValue = parseFloat(formatToken(totalValue)).toFixed(2);
+  const formattedTotalValue = formatToken(totalValue);
   const error = (value && +value <= 0) || +value > +formattedTotalValue;
   return (
     <div className={css.amount}>

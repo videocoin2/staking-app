@@ -2,6 +2,7 @@ import { formatEther } from '@ethersproject/units';
 import { useWeb3React } from '@web3-react/core';
 import contract from 'lib/contract';
 import { formatToken } from 'lib/units';
+import { toFixedNoRound } from 'lib/utils';
 import { observer } from 'mobx-react-lite';
 import React, { useCallback, useEffect } from 'react';
 import store from 'store';
@@ -69,12 +70,13 @@ const Wallet = () => {
   }, [getBalance]);
   useInterval(getBalance, BALANCE_FETCH_INTERVAL);
 
-  const formattedEthBalance = parseFloat(formatEther(ethBalance)).toFixed(2);
+  const formattedEthBalance = toFixedNoRound(formatEther(ethBalance), 2);
   // VID token has same precision as ETH coin, so we can use ether format utils
-  const formattedVidBalance = parseFloat(formatToken(vidBalance)).toFixed(2);
-  const formattedTotalStake = parseFloat(
-    totalStake ? formatToken(totalStake) : '0'
-  ).toFixed(2);
+  const formattedVidBalance = toFixedNoRound(formatToken(vidBalance), 2);
+  const formattedTotalStake = toFixedNoRound(
+    totalStake ? formatToken(totalStake) : '0',
+    2
+  );
   const renderMetaMaskData = () => {
     if (!isMetamaskInstalled) {
       return (

@@ -56,10 +56,11 @@ const WorkerPage = () => {
   const [cachedAmount, setCachedAmount] = useState('');
   const [gasFee, setGasFee] = useState(1);
   const [modal, setModal] = useState<Modal | null>(null);
+  const [personalStake, setPersonalStake] = useState(0);
   const closeModal = () => setModal(null);
   const { selectedWorker, selectWorker, vidBalance, fetchDelegations } = store;
   const { account, library, chainId } = useWeb3React();
-  const { name, address, personalStake = 0 } = selectedWorker;
+  const { name, address } = selectedWorker;
   const signer = library.getSigner(account);
   const token = contract(REACT_APP_TOKEN_ADDRESS, tokenInterface.abi, signer);
 
@@ -96,6 +97,14 @@ const WorkerPage = () => {
         });
     }
   }, [library]);
+
+  useEffect(() => {
+    if (escrow && account && selectedWorker) {
+      escrow.locked(account, selectedWorker.address).then((value: any) => {
+        setPersonalStake(value);
+      });
+    }
+  }, [escrow, account, selectedWorker]);
 
   const prepareStake = () => {
     setModal(Modal.confirm);
@@ -150,7 +159,7 @@ const WorkerPage = () => {
           overrides
         );
       } else if (diff.gt(0)) {
-        allowancePromise = token.increaseApproval(
+        allowancePromise = token.decreaseApproval(
           REACT_APP_ESCROW_ADDRESS,
           diff,
           overrides
@@ -270,12 +279,10 @@ const WorkerPage = () => {
     setModal(isUnstake ? Modal.agreementUnstake : Modal.agreementStake);
   if (!selectedWorker) return null;
 
-  const formattedPersonalStake = parseFloat(formatToken(personalStake)).toFixed(
-    2
+  const formattedPersonalStake = formatToken(personalStake);
+  const formattedTotalValue = formatToken(
+    isUnstake ? personalStake : vidBalance
   );
-  const formattedTotalValue = parseFloat(
-    formatToken(isUnstake ? personalStake : vidBalance)
-  ).toFixed(2);
   const disabled =
     !amount || parseFloat(amount) <= 0 || +amount > +formattedTotalValue;
   return (
