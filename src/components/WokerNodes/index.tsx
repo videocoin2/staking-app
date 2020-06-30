@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber';
 import useRequest from 'api/useRequest';
 import { GENESIS_POOL_WORKERS, WorkerStatus } from 'const';
 import {
@@ -54,37 +55,57 @@ const WorkerNodes = () => {
       // eslint-disable-next-line
       ({ is_internal, address, worker_state }) =>
         // eslint-disable-next-line
-        !is_internal && address && worker_state === 'BONDED'
+        !is_internal && address
     )(items);
 
     const splitData = reduce(
-      (acc: any, { address, ...el }: any) => {
+      // eslint-disable-next-line
+      (acc: any, { address, worker_state, ...el }: any) => {
         const delegate = find({ delegatee: address }, delegations);
         const isGenesis = GENESIS_POOL_WORKERS.includes(address);
-        if (isGenesis) {
+        // eslint-disable-next-line
+        const isBonded = worker_state === 'BONDED';
+        if (isGenesis && isBonded) {
           acc.genesisPool.push({
             ...el,
             address,
+            // eslint-disable-next-line
+            worker_state,
             personalStake: delegate?.amount ?? 0,
           });
           return acc;
         }
-        if (delegate) {
+        if (delegate && isBonded) {
           acc.withStake.push({
             ...el,
             address,
+            // eslint-disable-next-line
+            worker_state,
             personalStake: delegate.amount,
           });
           return acc;
+        } else if (delegate && BigNumber.from(delegate.amount).gt(0)) {
+          acc.toUnstake.push({
+            ...el,
+            address,
+            // eslint-disable-next-line
+            worker_state,
+            personalStake: delegate.amount,
+          });
         }
-        acc.withoutStake.push({
-          ...el,
-          address,
-        });
+        if (isBonded) {
+          acc.withoutStake.push({
+            ...el,
+            // eslint-disable-next-line
+            worker_state,
+            address,
+          });
+        }
         return acc;
       },
       {
         withStake: [],
+        toUnstake: [],
         withoutStake: [],
         genesisPool: [],
       }
@@ -95,9 +116,14 @@ const WorkerNodes = () => {
       reverse,
       sortBy('personalStake')
     )(splitData.withStake);
+    const sortedUnstakeOnly = compose(
+      reverse,
+      sortBy('personalStake')
+    )(splitData.toUnstake);
     return flatten([
       splitData.genesisPool,
       sortedPersonalStake,
+      sortedUnstakeOnly,
       groupedByStatus[WorkerStatus.BUSY] || [],
       groupedByStatus[WorkerStatus.IDLE] || [],
       groupedByStatus[WorkerStatus.NEW] || [],

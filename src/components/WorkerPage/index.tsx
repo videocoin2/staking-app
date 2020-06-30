@@ -59,8 +59,9 @@ const WorkerPage = () => {
   const [personalStake, setPersonalStake] = useState(0);
   const closeModal = () => setModal(null);
   const { selectedWorker, selectWorker, vidBalance, fetchDelegations } = store;
-  const { account, library, chainId } = useWeb3React();
-  const { name, address } = selectedWorker;
+  const { account, library } = useWeb3React();
+  // eslint-disable-next-line
+  const { name, address, worker_state } = selectedWorker;
   const signer = library.getSigner(account);
   const token = contract(REACT_APP_TOKEN_ADDRESS, tokenInterface.abi, signer);
 
@@ -74,7 +75,12 @@ const WorkerPage = () => {
   const handleBack = () => selectWorker(null);
   const handleStakeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setStake((+value as unknown) as StakeType);
+    // eslint-disable-next-line
+    if (worker_state !== 'BONDED') {
+      setStake(StakeType.Unstake);
+    } else {
+      setStake((+value as unknown) as StakeType);
+    }
     const temp = amount;
     setAmount(cachedAmount);
     setCachedAmount(temp);
@@ -97,6 +103,14 @@ const WorkerPage = () => {
         });
     }
   }, [library]);
+
+  useEffect(() => {
+    // eslint-disable-next-line
+    if (worker_state && worker_state !== 'BONDED') {
+      setStake(StakeType.Unstake);
+    }
+    // eslint-disable-next-line
+  }, [worker_state]);
 
   useEffect(() => {
     if (escrow && account && selectedWorker) {
