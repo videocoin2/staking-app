@@ -9,8 +9,9 @@ import escrowInterface from 'contract/escrow.json';
 import tokenInterface from 'contract/token.json';
 import contract from 'lib/contract';
 import { formatToken, parseToken } from 'lib/units';
-import { find } from 'lodash/fp';
+import { find, merge } from 'lodash/fp';
 import { observer } from 'mobx-react-lite';
+import publicIp from 'public-ip';
 import React, {
   ChangeEvent,
   ReactNode,
@@ -57,8 +58,15 @@ const WorkerPage = () => {
   const [gasFee, setGasFee] = useState(1);
   const [modal, setModal] = useState<Modal | null>(null);
   const [personalStake, setPersonalStake] = useState(0);
+  const [accountTOC, setAccountTOC] = useState();
   const closeModal = () => setModal(null);
-  const { selectedWorker, selectWorker, vidBalance, fetchDelegations } = store;
+  const {
+    selectedWorker,
+    selectWorker,
+    vidBalance,
+    fetchDelegations,
+    db,
+  } = store;
   const { account, library } = useWeb3React();
   // eslint-disable-next-line
   const { name, address, worker_state } = selectedWorker;
@@ -113,6 +121,15 @@ const WorkerPage = () => {
   }, [worker_state]);
 
   useEffect(() => {
+    if (db && account) {
+      const accountRef = db.collection('accounts').doc(account);
+      accountRef.get().then((doc: any) => {
+        setAccountTOC(doc.data());
+      });
+    }
+  }, [db, account]);
+
+  useEffect(() => {
     if (escrow && account && selectedWorker) {
       escrow.locked(account, selectedWorker.address).then((value: any) => {
         setPersonalStake(value);
@@ -121,7 +138,23 @@ const WorkerPage = () => {
   }, [escrow, account, selectedWorker]);
 
   const prepareStake = () => {
+    updateDB();
     setModal(Modal.confirm);
+  };
+
+  const prepareUnstake = () => {
+    updateDB();
+    handleUnstake();
+  };
+
+  const updateDB = async () => {
+    if (db) {
+      const ipv4 = await publicIp.v4();
+      const time = new Date();
+      const data = { ip: ipv4, time: time.toString() };
+      const obj = isGenesis ? { genesis: data } : { notGenesis: data };
+      await db.collection('accounts').doc(account).set(merge(accountTOC, obj));
+    }
   };
 
   const updateCurrentStake = () => {
@@ -235,8 +268,6 @@ const WorkerPage = () => {
       gasPrice: gasFee * 1e9,
     };
     const locked = await escrow.locked(account, selectedWorker.address);
-    console.log(locked.toString());
-    console.log(parseToken(amount).toString());
     escrow
       .transferFrom(
         selectedWorker.address,
@@ -281,16 +312,27 @@ const WorkerPage = () => {
       [Modal.agreementUnstake]: (
         <TermsPolicyModal
           onClose={closeModal}
-          onAgree={handleUnstake}
+          onAgree={prepareUnstake}
           isGenesis={isGenesis}
         />
       ),
     }),
-    [handleStake, handleUnstake]
+    [handleStake, isGenesis]
   );
   const isUnstake = stake === StakeType.Unstake;
-  const requireStake = () =>
-    setModal(isUnstake ? Modal.agreementUnstake : Modal.agreementStake);
+  const requireStake = () => {
+    if (
+      !accountTOC ||
+      (isGenesis && !(accountTOC as any).genesis) ||
+      (!isGenesis && !(accountTOC as any).notGenesis)
+    ) {
+      setModal(isUnstake ? Modal.agreementUnstake : Modal.agreementStake);
+    } else if (isUnstake) {
+      prepareUnstake();
+    } else {
+      setModal(Modal.confirm);
+    }
+  };
   if (!selectedWorker) return null;
 
   const formattedPersonalStake = formatToken(personalStake);

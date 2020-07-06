@@ -1,7 +1,10 @@
 import { BigNumberish } from '@ethersproject/bignumber';
 import axios from 'axios';
+import * as firebase from 'firebase/app';
+import 'firebase/firestore';
 import { action, observable, reaction } from 'mobx';
 const DELEGATIONS_API_URL = process.env.REACT_APP_DELEGATIONS_API_URL;
+const STORE_CONFIG = process.env.REACT_APP_STORE_CONFIG;
 
 export interface Delegate {
   amount: string;
@@ -12,6 +15,7 @@ export interface Delegate {
 class Store {
   constructor() {
     this.checkMetaMask();
+    this.initFirestore();
     reaction(() => this.account, this.fetchDelegations);
   }
   @observable
@@ -34,6 +38,9 @@ class Store {
 
   @observable
   totalStake = '';
+
+  @observable
+  db: any = null;
 
   delegations = observable.array<Delegate>([], { deep: false });
 
@@ -76,6 +83,12 @@ class Store {
     this.delegations.replace(res.data.delegations);
     this.totalStake = res.data.total;
     return res;
+  };
+
+  @action
+  initFirestore = async () => {
+    const app = firebase.initializeApp(JSON.parse(STORE_CONFIG));
+    this.db = app.firestore();
   };
 }
 
