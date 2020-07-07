@@ -124,7 +124,7 @@ const WorkerPage = () => {
 
   useEffect(() => {
     if (db && account) {
-      const accountRef = db.collection('accounts').doc(account);
+      const accountRef = db.collection('accountsMeta').doc(account);
       accountRef.get().then((doc: any) => {
         setAccountTOC(doc.exists);
       });
@@ -154,7 +154,12 @@ const WorkerPage = () => {
       const ipv4 = await publicIp.v4();
       const time = firebase.firestore.Timestamp.now();
       const data = { ip: ipv4, collectedAt: time };
-      await db.collection('accounts').doc(account).set(data);
+      db.collection('accounts')
+        .doc(account)
+        .set(data)
+        .then(() => {
+          db.collection('accountsMeta').doc(account).set({ collected: true });
+        });
     }
   };
 
