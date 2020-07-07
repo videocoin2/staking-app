@@ -7,6 +7,8 @@ import { useWeb3React } from '@web3-react/core';
 import { ReactComponent as ArrowLeft } from 'assets/arrowLeft.svg';
 import escrowInterface from 'contract/escrow.json';
 import tokenInterface from 'contract/token.json';
+import * as firebase from 'firebase/app';
+import 'firebase/firestore';
 import contract from 'lib/contract';
 import { formatToken, parseToken } from 'lib/units';
 import { find } from 'lodash/fp';
@@ -124,7 +126,7 @@ const WorkerPage = () => {
     if (db && account) {
       const accountRef = db.collection('accounts').doc(account);
       accountRef.get().then((doc: any) => {
-        setAccountTOC(doc.data());
+        setAccountTOC(doc.exists);
       });
     }
   }, [db, account]);
@@ -150,8 +152,8 @@ const WorkerPage = () => {
   const writeToDB = async () => {
     if (db && isGenesis && !accountTOC) {
       const ipv4 = await publicIp.v4();
-      const time = new Date();
-      const data = { ip: ipv4, time: time.toString() };
+      const time = firebase.firestore.Timestamp.now();
+      const data = { ip: ipv4, collectedAt: time };
       await db.collection('accounts').doc(account).set(data);
     }
   };
@@ -320,7 +322,6 @@ const WorkerPage = () => {
   );
   const isUnstake = stake === StakeType.Unstake;
   const requireStake = () => {
-    console.log(accountTOC);
     if (isGenesis && accountTOC) {
       isUnstake ? prepareUnstake() : setModal(Modal.confirm);
     } else {

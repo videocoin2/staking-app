@@ -1,6 +1,7 @@
 import { BigNumberish } from '@ethersproject/bignumber';
 import axios from 'axios';
 import * as firebase from 'firebase/app';
+import 'firebase/auth';
 import 'firebase/firestore';
 import { action, observable, reaction } from 'mobx';
 const DELEGATIONS_API_URL = process.env.REACT_APP_DELEGATIONS_API_URL;
@@ -89,6 +90,7 @@ class Store {
   initFirestore = async () => {
     const app = firebase.initializeApp(JSON.parse(STORE_CONFIG));
     this.db = app.firestore();
+    app.auth().signInAnonymously();
   };
 }
 
