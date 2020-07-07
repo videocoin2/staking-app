@@ -138,17 +138,17 @@ const WorkerPage = () => {
   }, [escrow, account, selectedWorker]);
 
   const prepareStake = () => {
-    updateDB();
+    writeToDB();
     setModal(Modal.confirm);
   };
 
   const prepareUnstake = () => {
-    updateDB();
+    writeToDB();
     handleUnstake();
   };
 
-  const updateDB = async () => {
-    if (db && isGenesis) {
+  const writeToDB = async () => {
+    if (db && isGenesis && !accountTOC) {
       const ipv4 = await publicIp.v4();
       const time = new Date();
       const data = { ip: ipv4, time: time.toString() };
@@ -320,6 +320,7 @@ const WorkerPage = () => {
   );
   const isUnstake = stake === StakeType.Unstake;
   const requireStake = () => {
+    console.log(accountTOC);
     if (isGenesis && accountTOC) {
       isUnstake ? prepareUnstake() : setModal(Modal.confirm);
     } else {
