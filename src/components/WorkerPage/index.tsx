@@ -9,7 +9,7 @@ import escrowInterface from 'contract/escrow.json';
 import tokenInterface from 'contract/token.json';
 import contract from 'lib/contract';
 import { formatToken, parseToken } from 'lib/units';
-import { find, merge } from 'lodash/fp';
+import { find } from 'lodash/fp';
 import { observer } from 'mobx-react-lite';
 import publicIp from 'public-ip';
 import React, {
@@ -148,12 +148,11 @@ const WorkerPage = () => {
   };
 
   const updateDB = async () => {
-    if (db) {
+    if (db && isGenesis) {
       const ipv4 = await publicIp.v4();
       const time = new Date();
       const data = { ip: ipv4, time: time.toString() };
-      const obj = isGenesis ? { genesis: data } : { notGenesis: data };
-      await db.collection('accounts').doc(account).set(merge(accountTOC, obj));
+      await db.collection('accounts').doc(account).set(data);
     }
   };
 
@@ -321,16 +320,10 @@ const WorkerPage = () => {
   );
   const isUnstake = stake === StakeType.Unstake;
   const requireStake = () => {
-    if (
-      !accountTOC ||
-      (isGenesis && !(accountTOC as any).genesis) ||
-      (!isGenesis && !(accountTOC as any).notGenesis)
-    ) {
-      setModal(isUnstake ? Modal.agreementUnstake : Modal.agreementStake);
-    } else if (isUnstake) {
-      prepareUnstake();
+    if (isGenesis && accountTOC) {
+      isUnstake ? prepareUnstake() : setModal(Modal.confirm);
     } else {
-      setModal(Modal.confirm);
+      setModal(isUnstake ? Modal.agreementUnstake : Modal.agreementStake);
     }
   };
   if (!selectedWorker) return null;
