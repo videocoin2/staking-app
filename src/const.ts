@@ -17,5 +17,8 @@ export const TRANSACTION_KEY = 'transaction';
 export const BALANCE_FETCH_INTERVAL = 3000;
 export const GENESIS_POOL_WORKERS = [
   '0x6EBB37C387f073Db87f53A391a343D18044d534A',
-  '0xa19c77AFD9ff3b698DB46C02e43F828c03dE2A6b',
+  '0xf8943d8e331e2B0efd50F084e818668cebb0E4F1', // dev
 ];
+
+export const GAS_LIMIT = 800000;
+export const CONFIRMATIONS = 8;

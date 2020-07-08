@@ -24,7 +24,12 @@ import React, {
 } from 'react';
 import store from 'store';
 import { Button, Typography } from 'ui-kit';
-import { GENESIS_POOL_WORKERS, TRANSACTION_KEY } from '../../const';
+import {
+  CONFIRMATIONS,
+  GAS_LIMIT,
+  GENESIS_POOL_WORKERS,
+  TRANSACTION_KEY,
+} from '../../const';
 import AmountInput from './AmountInput';
 import AwaitingModal from './AwaitingModal';
 import ConfirmTransactionsModal from './ConfirmTransactionsModal';
@@ -38,8 +43,6 @@ import TermsPolicyModal from './TermsPolicyModal';
 
 const REACT_APP_TOKEN_ADDRESS = process.env.REACT_APP_TOKEN_ADDRESS;
 const REACT_APP_ESCROW_ADDRESS = process.env.REACT_APP_ESCROW_ADDRESS;
-const GAS_LIMIT = 800000;
-const CONFIRMATIONS = 8;
 
 enum Modal {
   confirm,
