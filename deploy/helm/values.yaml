@@ -2,19 +2,24 @@ replicasCount: 1
 maxUnavailableCount: 0
 
 image:
-  repository: gcr.io/videocoin-network/staking
+  repository: registry.videocoin.net/cloud/staking
   tag: latest
   pullPolicy: Always
+  pullSecrets: 
+  - name: regcred
+
+serviceAccount:
+  name: default
 
 service:
   name: http
   type: NodePort
-  externalPort: 80
-  internalPort: 80
+  ports: 
+    http: 80
 
 autoscaler:
   minCount: 1
-  maxCount: 10
+  maxCount: 3
 
 resources:
   limits:

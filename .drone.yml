@@ -1,0 +1,44 @@
+kind: pipeline
+type: kubernetes
+name: staking.dev.videocoin.network
+
+steps:
+  - name: submodules
+    image: alpine/git
+    commands:
+      - git submodule update --init --recursive
+  - name: build
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: registry_username
+      password:
+        from_secret: registry_password
+      registry: registry.videocoin.net
+      repo: registry.videocoin.net/cloud/staking
+      build_args:
+        - REACT_APP_API_URL=https://console.dev.videocoin.net/api/v1
+        - REACT_APP_GAS_KEY=c2babe0568556b4b93165dde81a0348cb5e4eb7d6f07b9f1c0be19add54b
+        - REACT_APP_DELEGATIONS_API_URL=https://symphony.dev.videocoin.net/api/v1/delegations
+        - REACT_APP_NETWORKS=5
+        - REACT_APP_TOKEN_ADDRESS=0xc35550282b2a7F2148dD4513c70f9dAA1AFA277C
+        - REACT_APP_ESCROW_ADDRESS=0x6bB9DF55B2c7DE181DB2F953B3f5e15baC7e1523
+        - 'REACT_APP_STORE_CONFIG={"apiKey": "AIzaSyA7oip8HUVIW1EvvZLVUDixho0iK_Ln3qg","authDomain": "videocoin-firebase.firebaseapp.com","databaseURL": "https://videocoin-firebase.firebaseio.com","projectId": "videocoin-firebase","storageBucket": "videocoin-firebase.appspot.com","messagingSenderId": "1012727539280","appId": "1:1012727539280:web:1d6e97df94f6fb0ccad355","measurementId": "G-Q0RBTTL363"}'
+      tags:
+        - ${DRONE_COMMIT_SHA}
+  - name: deploy
+    image: devth/helm:v3.1.1
+    environment:
+      KUBE_CONFIG:
+        from_secret: dev_kube_config
+    commands:
+      - echo $KUBE_CONFIG | base64 -d > kube.config
+      - helm --kubeconfig=kube.config upgrade -i --wait --set image.tag=$DRONE_COMMIT_SHA -n console staking ./deploy/helm
+
+trigger:
+  event:
+    - push
+    - pull_request
+  branch:
+    - drone
+    - infra

@@ -1,4 +1,4 @@
 [submodule "src/ui-kit"]
 	path = src/ui-kit
-	url = git@github.com:videocoin/cloud-ui-kit.git
+	url = https://github.com/videocoin/cloud-ui-kit.git
 	branch = develop
