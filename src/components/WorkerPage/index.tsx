@@ -155,7 +155,7 @@ const WorkerPage = () => {
   const writeToDB = async () => {
     if (db && isGenesis && !accountTOC) {
       const ipv4 = await publicIp.v4();
-      const time = firebase.firestore.Timestamp.now();
+      const time = firebase.firestore.FieldValue.serverTimestamp();
       const data = { ip: ipv4, collectedAt: time };
       db.collection('accounts')
         .doc(account)
