@@ -1,9 +1,8 @@
 GOOS?=linux
 GOARCH?=amd64
-GCP_PROJECT?=videocoin-network
+
 NAME=staking
-VERSION=$$(git describe --abbrev=0)-$$(git rev-parse --abbrev-ref HEAD)-$$(git rev-parse --short HEAD)
-ENV?=dev
+VERSION=$$(git rev-parse HEAD)
 
 REACT_APP_API_URL?=
 REACT_APP_GAS_KEY?=c2babe0568556b4b93165dde81a0348cb5e4eb7d6f07b9f1c0be19add54b
@@ -44,4 +43,4 @@ docker-push:
 release: docker-build docker-push
 
 deploy:
-	ENV=${ENV} GCP_PROJECT=${GCP_PROJECT} deploy/deploy.sh
+	helm upgrade -i --wait --set image.tag="{VERSION}" -n console staking ./deploy/helm
