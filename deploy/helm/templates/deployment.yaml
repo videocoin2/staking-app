@@ -4,8 +4,6 @@ metadata:
   name: {{ .Chart.Name }}
   labels:
     app: {{ .Chart.Name }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-    heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicasCount }}
   strategy:
@@ -16,7 +14,7 @@ spec:
       labels:
         app: {{ .Chart.Name }}
     spec:
-    {{- with .Values.imagePullSecrets }}
+    {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
