@@ -26,6 +26,10 @@ steps:
       tags:
         - latest
         - ${DRONE_COMMIT_SHA}
+    resources:
+      requests:
+        cpu: 1000
+        memory: 1024MiB
   - name: deploy
     image: devth/helm:v3.1.1
     environment:
@@ -70,6 +74,10 @@ steps:
         - 'REACT_APP_STORE_CONFIG={"apiKey": "AIzaSyA7oip8HUVIW1EvvZLVUDixho0iK_Ln3qg","authDomain": "videocoin-firebase.firebaseapp.com","databaseURL": "https://videocoin-firebase.firebaseio.com","projectId": "videocoin-firebase","storageBucket": "videocoin-firebase.appspot.com","messagingSenderId": "1012727539280","appId": "1:1012727539280:web:1d6e97df94f6fb0ccad355","measurementId": "G-Q0RBTTL363"}'
       tags:
         - ${DRONE_TAG}-prerelease
+    resources:
+      requests:
+        cpu: 1000
+        memory: 1024MiB
 trigger:
   event:
     - tag
@@ -103,6 +111,10 @@ steps:
         - 'REACT_APP_STORE_CONFIG={"apiKey": "AIzaSyA7oip8HUVIW1EvvZLVUDixho0iK_Ln3qg","authDomain": "videocoin-firebase.firebaseapp.com","databaseURL": "https://videocoin-firebase.firebaseio.com","projectId": "videocoin-firebase","storageBucket": "videocoin-firebase.appspot.com","messagingSenderId": "1012727539280","appId": "1:1012727539280:web:1d6e97df94f6fb0ccad355","measurementId": "G-Q0RBTTL363"}'
       tags:
         - ${DRONE_TAG}
+    resources:
+      requests:
+        cpu: 1000
+        memory: 1024MiB
 trigger:
   event:
     - tag
