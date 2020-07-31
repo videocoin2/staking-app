@@ -49,7 +49,11 @@ const WorkerNodes = () => {
     }
   );
   const items = () => {
-    if (!data) return [];
+    if (!data)
+      return {
+        genesisPool: [],
+        cash: [],
+      };
     const items = data.items || [];
     const dataWithAddress = filter(
       // eslint-disable-next-line
@@ -120,15 +124,17 @@ const WorkerNodes = () => {
       reverse,
       sortBy('personalStake')
     )(splitData.toUnstake);
-    return flatten([
-      splitData.genesisPool,
-      sortedPersonalStake,
-      sortedUnstakeOnly,
-      groupedByStatus[WorkerStatus.BUSY] || [],
-      groupedByStatus[WorkerStatus.IDLE] || [],
-      groupedByStatus[WorkerStatus.NEW] || [],
-      groupedByStatus[WorkerStatus.OFFLINE] || [],
-    ]);
+    return {
+      genesisPool: splitData.genesisPool,
+      cash: flatten([
+        sortedPersonalStake,
+        sortedUnstakeOnly,
+        groupedByStatus[WorkerStatus.BUSY] || [],
+        groupedByStatus[WorkerStatus.IDLE] || [],
+        groupedByStatus[WorkerStatus.NEW] || [],
+        groupedByStatus[WorkerStatus.OFFLINE] || [],
+      ]),
+    };
   };
   if (!data) return <Spinner />;
   return (
@@ -137,9 +143,27 @@ const WorkerNodes = () => {
       <Typography type="subtitleThin" opacity="drift">
         Select a worker node to stake your VideoCoin
       </Typography>
+      <Typography className={css.head} type="subtitleCaps">
+        Genesis Program Staking
+      </Typography>
+      <Typography className={css.programDesc} opacity="drift">
+        Earn VID rewards for staking VID onto our Genesis Program worker pool
+      </Typography>
       <table className={css.table}>
         <TableHead />
-        <tbody>{map(renderNode)(items())}</tbody>
+        <tbody>{map(renderNode)(items().genesisPool)}</tbody>
+      </table>
+      <Typography className={css.head} type="subtitleCaps">
+        Cash Reward Staking
+      </Typography>
+      <Typography className={css.programDesc} opacity="drift">
+        The VideoCoin Network does not manage rewards for VID staked on third
+        party worker nodes. View each worker’s rewards policy to see what
+        rewards will be paid out.
+      </Typography>
+      <table className={css.table}>
+        <TableHead />
+        <tbody>{map(renderNode)(items().cash)}</tbody>
       </table>
     </div>
   );

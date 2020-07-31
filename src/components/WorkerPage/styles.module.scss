@@ -10,21 +10,29 @@
 }
 
 .currentStake {
-  display: flex;
-  align-items: baseline;
-  margin-top: 36px;
-  margin-bottom: 64px;
-  & > div:first-child {
-    margin-right: 36px;
-  }
-  & > div:last-child {
-    margin-left: 4px;
+  margin-right: 36px;
+  padding: 24px 36px;
+  background-color: #290f4d;
+  border-radius: 16px;
+  min-width: 332px;
+  flex-shrink: 0;
+  & > div {
+    display: flex;
+    justify-content: space-between;
+    & > div:last-child {
+      display: flex;
+      align-items: baseline;
+      margin-left: 30px;
+      & > div:last-child {
+        margin-left: 4px;
+      }
+    }
   }
 }
 
 .head {
   padding: 0 8px;
-  border-bottom: 1px solid #3F2A5D;
+  border-bottom: 1px solid #3f2a5d;
   margin-bottom: 49px;
 }
 .stakeToggle {
@@ -42,13 +50,13 @@
     font-size: 14px;
     font-weight: 500;
     letter-spacing: 0.07px;
-    color: rgba(#E1CCFF, .48);
+    color: rgba(#e1ccff, 0.48);
     cursor: pointer;
     position: relative;
     z-index: 1;
-    transition: color .15s ease-in-out;
+    transition: color 0.15s ease-in-out;
     &.active {
-      color: #0C0417;
+      color: #0c0417;
     }
   }
   input {
@@ -66,9 +74,9 @@
   width: 50%;
   left: 0;
   top: 0;
-  background:#FD9369 ;
+  background: #fd9369;
   border-radius: 8px;
-  transition: transform .15s ease-in-out;
+  transition: transform 0.15s ease-in-out;
   &.right {
     transform: translateX(100%);
   }
@@ -87,14 +95,14 @@
     background: none;
     border: none;
     margin-bottom: 5px;
-    div{
+    div {
       text-transform: capitalize;
     }
   }
-   & > div:last-child {
-     margin-left: 25px;
-     text-align: right;
-   }
+  & > div:last-child {
+    margin-left: 25px;
+    text-align: right;
+  }
 }
 
 .amount {
@@ -117,7 +125,7 @@
     background: none;
     height: 40px;
     width: 72px;
-    background: #7234C8;
+    background: #7234c8;
     border-radius: 8px;
     color: #fff;
     padding-top: 1px;
@@ -136,7 +144,7 @@
   }
 }
 
-.gasFeeValue{
+.gasFeeValue {
   display: flex;
   align-items: center;
   margin-bottom: 36px;
@@ -148,4 +156,20 @@
 .submitBtn {
   text-align: right;
   margin-top: 36px;
+}
+.desc {
+  display: flex;
+
+  margin-top: 36px;
+  margin-bottom: 64px;
+}
+
+.email {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  text-decoration: none;
+  svg {
+    margin-right: 12px;
+  }
 }

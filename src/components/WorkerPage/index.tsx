@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/camelcase */
+
 import { BigNumber } from '@ethersproject/bignumber';
 import {
   TransactionReceipt,
@@ -23,7 +25,7 @@ import React, {
   useState,
 } from 'react';
 import store from 'store';
-import { Button, Typography } from 'ui-kit';
+import { Button, Icon, Typography } from 'ui-kit';
 import {
   CONFIRMATIONS,
   GAS_LIMIT,
@@ -73,8 +75,15 @@ const WorkerPage = () => {
     db,
   } = store;
   const { account, library } = useWeb3React();
-  // eslint-disable-next-line
-  const { name, address, worker_state } = selectedWorker;
+  const {
+    name,
+    address,
+    worker_state,
+    delegate_policy,
+    org_name,
+    org_email,
+    org_desc,
+  } = selectedWorker;
   const signer = library.getSigner(account);
   const token = contract(REACT_APP_TOKEN_ADDRESS, tokenInterface.abi, signer);
 
@@ -88,7 +97,6 @@ const WorkerPage = () => {
   const handleBack = () => selectWorker(null);
   const handleStakeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    // eslint-disable-next-line
     if (worker_state !== 'BONDED') {
       setStake(StakeType.Unstake);
     } else {
@@ -118,11 +126,9 @@ const WorkerPage = () => {
   }, [library]);
 
   useEffect(() => {
-    // eslint-disable-next-line
     if (worker_state && worker_state !== 'BONDED') {
       setStake(StakeType.Unstake);
     }
-    // eslint-disable-next-line
   }, [worker_state]);
 
   useEffect(() => {
@@ -351,13 +357,39 @@ const WorkerPage = () => {
       </button>
       <Typography type="title">{name}</Typography>
       <Typography type="bodyThin">{address}</Typography>
-      <div className={css.currentStake}>
-        <Typography type="subtitle">Current Stake</Typography>
-        <Typography type="subtitle" theme="white">
-          {formattedPersonalStake}
-        </Typography>
-        <Typography type="bodyThin">VID</Typography>
+      <div className={css.desc}>
+        <div className={css.currentStake}>
+          <div>
+            <Typography type="subtitle" theme="white">
+              Personal Stake
+            </Typography>
+            <div>
+              <Typography type="subtitle" theme="white">
+                {formattedPersonalStake}
+              </Typography>
+              <Typography type="bodyThin">VID</Typography>
+            </div>
+          </div>
+        </div>
+        <div>
+          <Typography type="subtitle" theme="white">
+            {org_name}
+          </Typography>
+          <a href={`mailto:${org_email}`} className={css.email}>
+            <Icon name="email" color="#fff" />
+            <Typography type="smallBodyThin">{org_email}</Typography>
+          </a>
+          <Typography type="smallBodyThin">{org_desc}</Typography>
+        </div>
       </div>
+      {delegate_policy && (
+        <>
+          <Typography className={css.head} type="subtitleCaps">
+            Delegate Payout Policy
+          </Typography>
+          <Typography>{delegate_policy}</Typography>
+        </>
+      )}
       <Typography className={css.head} type="subtitleCaps">
         worker staking
       </Typography>

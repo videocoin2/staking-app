@@ -21,6 +21,7 @@ module.exports = {
   plugins: ['@typescript-eslint', 'prettier', 'react'],
   rules: {
     '@typescript-eslint/no-inferrable-types': 0,
+    '@typescript-eslint/camelcase': 0,
     '@typescript-eslint/explicit-function-return-type': [
       'warn',
       {
