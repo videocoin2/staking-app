@@ -12,7 +12,7 @@ import tokenInterface from 'contract/token.json';
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import contract from 'lib/contract';
-import { formatToken, parseToken } from 'lib/units';
+import { formatNumber, formatToken, parseToken } from 'lib/units';
 import { find } from 'lodash/fp';
 import { observer } from 'mobx-react-lite';
 import publicIp from 'public-ip';
@@ -80,6 +80,8 @@ const WorkerPage = () => {
     address,
     worker_state,
     delegate_policy,
+    total_stake,
+    self_stake,
     org_name,
     org_email,
     org_desc,
@@ -345,6 +347,8 @@ const WorkerPage = () => {
   if (!selectedWorker) return null;
 
   const formattedPersonalStake = formatToken(personalStake);
+  const formattedTotalStake = formatNumber(total_stake);
+  const formattedDirectStake = formatNumber(self_stake);
   const formattedTotalValue = formatToken(
     isUnstake ? personalStake : vidBalance
   );
@@ -368,6 +372,20 @@ const WorkerPage = () => {
                 {formattedPersonalStake}
               </Typography>
               <Typography type="bodyThin">VID</Typography>
+            </div>
+          </div>
+          <div>
+            <Typography type="bodyThin">Worker’s Total Stake</Typography>
+            <div>
+              <Typography type="body">{formattedTotalStake}</Typography>
+              <Typography type="smallBodyThin">VID</Typography>
+            </div>
+          </div>
+          <div>
+            <Typography type="bodyThin">Directly Staked</Typography>
+            <div>
+              <Typography type="body">{formattedDirectStake}</Typography>
+              <Typography type="smallBodyThin">VID</Typography>
             </div>
           </div>
         </div>

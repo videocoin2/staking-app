@@ -16,6 +16,9 @@
   border-radius: 16px;
   min-width: 332px;
   flex-shrink: 0;
+  & > div:first-child {
+    margin-bottom: 24px;
+  }
   & > div {
     display: flex;
     justify-content: space-between;
