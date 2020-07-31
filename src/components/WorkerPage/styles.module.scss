@@ -30,13 +30,18 @@
   }
 }
 
+.delegatePolicy {
+  margin-bottom: 32px;
+}
+
 .head {
   padding: 0 8px;
   border-bottom: 1px solid #3f2a5d;
-  margin-bottom: 49px;
+  margin-bottom: 24px;
 }
 .stakeToggle {
   display: flex;
+  margin-top: 48px;
   height: 48px;
   border-radius: 8px;
   background: #281741;

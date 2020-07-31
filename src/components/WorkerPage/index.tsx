@@ -375,20 +375,22 @@ const WorkerPage = () => {
           <Typography type="subtitle" theme="white">
             {org_name}
           </Typography>
-          <a href={`mailto:${org_email}`} className={css.email}>
-            <Icon name="email" color="#fff" />
-            <Typography type="smallBodyThin">{org_email}</Typography>
-          </a>
+          {org_email && (
+            <a href={`mailto:${org_email}`} className={css.email}>
+              <Icon name="email" color="#fff" />
+              <Typography type="smallBodyThin">{org_email}</Typography>
+            </a>
+          )}
           <Typography type="smallBodyThin">{org_desc}</Typography>
         </div>
       </div>
       {delegate_policy && (
-        <>
+        <div className={css.delegatePolicy}>
           <Typography className={css.head} type="subtitleCaps">
             Delegate Payout Policy
           </Typography>
           <Typography>{delegate_policy}</Typography>
-        </>
+        </div>
       )}
       <Typography className={css.head} type="subtitleCaps">
         worker staking
