@@ -64,12 +64,16 @@ const WorkerNodes = () => {
 
     const splitData = reduce(
       // eslint-disable-next-line
-      (acc: any, { address, worker_state, ...el }: any) => {
+      (
+        acc: any,
+        { address, worker_state, allow_thirdparty_delegates, ...el }: any
+      ) => {
         const delegate = find({ delegatee: address }, delegations);
         const isGenesis = GENESIS_POOL_WORKERS.includes(address);
         // eslint-disable-next-line
-        const isBonded = worker_state === 'BONDED';
-        if (isGenesis && isBonded) {
+        const allowDelegates =
+          worker_state === 'BONDED' && allow_thirdparty_delegates;
+        if (isGenesis && allowDelegates) {
           acc.genesisPool.push({
             ...el,
             address,
@@ -79,7 +83,7 @@ const WorkerNodes = () => {
           });
           return acc;
         }
-        if (delegate && isBonded) {
+        if (delegate && allowDelegates) {
           acc.withStake.push({
             ...el,
             address,
@@ -97,7 +101,7 @@ const WorkerNodes = () => {
             personalStake: delegate.amount,
           });
         }
-        if (isBonded) {
+        if (allowDelegates) {
           acc.withoutStake.push({
             ...el,
             // eslint-disable-next-line
