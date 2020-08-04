@@ -85,6 +85,7 @@ const WorkerPage = () => {
     org_name,
     org_email,
     org_desc,
+    allow_thirdparty_delegates,
   } = selectedWorker;
   const signer = library.getSigner(account);
   const token = contract(REACT_APP_TOKEN_ADDRESS, tokenInterface.abi, signer);
@@ -353,7 +354,10 @@ const WorkerPage = () => {
     isUnstake ? personalStake : vidBalance
   );
   const disabled =
-    !amount || parseFloat(amount) <= 0 || +amount > +formattedTotalValue;
+    !amount ||
+    parseFloat(amount) <= 0 ||
+    +amount > +formattedTotalValue ||
+    (!isUnstake && !allow_thirdparty_delegates);
   return (
     <div className={css.root}>
       <button type="button" className={css.backBtn} onClick={handleBack}>

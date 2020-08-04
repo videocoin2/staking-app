@@ -79,6 +79,7 @@ const WorkerNodes = () => {
             address,
             // eslint-disable-next-line
             worker_state,
+            allow_thirdparty_delegates,
             personalStake: delegate?.amount ?? 0,
           });
           return acc;
@@ -89,23 +90,37 @@ const WorkerNodes = () => {
             address,
             // eslint-disable-next-line
             worker_state,
+            allow_thirdparty_delegates,
             personalStake: delegate.amount,
           });
           return acc;
         } else if (delegate && BigNumber.from(delegate.amount).gt(0)) {
-          acc.toUnstake.push({
-            ...el,
-            address,
-            // eslint-disable-next-line
-            worker_state,
-            personalStake: delegate.amount,
-          });
+          if (isGenesis) {
+            acc.genesisPool.push({
+              ...el,
+              address,
+              // eslint-disable-next-line
+              worker_state,
+              allow_thirdparty_delegates,
+              personalStake: delegate?.amount ?? 0,
+            });
+          } else {
+            acc.toUnstake.push({
+              ...el,
+              address,
+              // eslint-disable-next-line
+              worker_state,
+              allow_thirdparty_delegates,
+              personalStake: delegate.amount,
+            });
+          }
         }
         if (allowDelegates) {
           acc.withoutStake.push({
             ...el,
             // eslint-disable-next-line
             worker_state,
+            allow_thirdparty_delegates,
             address,
           });
         }
