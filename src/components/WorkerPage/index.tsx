@@ -15,6 +15,7 @@ import contract from 'lib/contract';
 import { formatNumber, formatToken, parseToken } from 'lib/units';
 import { find } from 'lodash/fp';
 import { observer } from 'mobx-react-lite';
+import Linkify from 'linkifyjs/react';
 import publicIp from 'public-ip';
 import React, {
   ChangeEvent,
@@ -57,6 +58,16 @@ enum Modal {
   agreementStake,
   agreementUnstake,
 }
+
+const linkifyOptions = {
+  tagName: 'a',
+  attributes: {
+    rel: 'noopener noreferrer',
+  },
+  target: {
+    url: '_blank',
+  },
+};
 
 const WorkerPage = () => {
   const [stake, setStake] = useState(StakeType.Stake);
@@ -403,7 +414,9 @@ const WorkerPage = () => {
               <Typography type="smallBodyThin">{org_email}</Typography>
             </a>
           )}
-          <Typography type="smallBodyThin">{org_desc}</Typography>
+          <Typography className={css.orgDesc} type="smallBodyThin">
+            <Linkify options={linkifyOptions}>{org_desc}</Linkify>
+          </Typography>
         </div>
       </div>
       {delegate_policy && (
@@ -411,7 +424,9 @@ const WorkerPage = () => {
           <Typography className={css.head} type="subtitleCaps">
             Delegate Payout Policy
           </Typography>
-          <Typography>{delegate_policy}</Typography>
+          <Typography className={css.orgDesc}>
+            <Linkify options={linkifyOptions}>{delegate_policy}</Linkify>
+          </Typography>
         </div>
       )}
       <Typography className={css.head} type="subtitleCaps">
