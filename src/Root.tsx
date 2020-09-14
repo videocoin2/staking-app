@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import 'typeface-rubik';
-import { observer } from 'mobx-react-lite';
-import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
-import './styles/index.scss';
-import Layout from 'components/Layout';
-import store from 'store';
-import GettingStarted from 'components/GettingStarted';
-import App from 'components/App';
-import WalletSetup from 'components/WalletSetup';
-import { useEagerConnect, useInactiveListener } from './lib/hooks';
 import { AbstractConnector } from '@web3-react/abstract-connector';
-import { injected } from './lib/connectors';
+import { useWeb3React } from '@web3-react/core';
+import App from 'components/App';
+import GettingStarted from 'components/GettingStarted';
+import Layout from 'components/Layout';
+import WalletError from 'components/WalletError';
+import WalletSetup from 'components/WalletSetup';
+import { filter } from 'lodash/fp';
+import { observer } from 'mobx-react-lite';
+import { default as React, useEffect, useMemo, useState } from 'react';
+import store from 'store';
+import 'typeface-rubik';
+import fetchWorkers from './api/fetchWorkers';
 import SwitchNetwork from './components/SwitchNetwork';
+import { injected } from './lib/connectors';
+import { useEagerConnect, useInactiveListener } from './lib/hooks';
+import './styles/index.scss';
 
 const connectorsByName: { [name: string]: AbstractConnector } = {
   Injected: injected,
@@ -40,6 +43,19 @@ function Root() {
     setActivatingConnector(currentConnector);
     activate(connectorsByName[name]);
   }, [activate]);
+  useMemo(async () => {
+    if (account) {
+      const items = await fetchWorkers();
+      const transcoderMatch = filter(
+        // eslint-disable-next-line
+        ({ is_internal, address }) =>
+          // eslint-disable-next-line
+          !is_internal && address === account
+      )(items);
+      setKeyUsedByTranscoder(transcoderMatch.length !== 0);
+    }
+  }, [account]);
+  const [keyUsedByTranscoder, setKeyUsedByTranscoder] = useState(false);
 
   const renderBody = () => {
     if (!isMetamaskInstalled) {
@@ -50,6 +66,9 @@ function Root() {
     }
     if (!account) {
       return <WalletSetup />;
+    }
+    if (keyUsedByTranscoder) {
+      return <WalletError />;
     }
     return <App />;
   };

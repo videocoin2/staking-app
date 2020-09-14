@@ -1,0 +1,18 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.img {
+  position: relative;
+  margin: auto auto -80px;
+}
+.box {
+  background-color: #290f4d;
+  border-radius: 20px;
+  text-align: center;
+  padding: 54px;
+  width: 100%;
+  max-width: 847px;
+  margin: 0 auto 140px;
+}
