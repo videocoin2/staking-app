@@ -102,9 +102,9 @@ steps:
       registry: registry.videocoin.net
       repo: registry.videocoin.net/cloud/staking
       build_args:
-        - REACT_APP_API_URL=https://console.videocoin.net/api/v1
+        - REACT_APP_API_URL=https://console.videocoin.network/api/v1
         - REACT_APP_GAS_KEY=c2babe0568556b4b93165dde81a0348cb5e4eb7d6f07b9f1c0be19add54b
-        - REACT_APP_DELEGATIONS_API_URL=https://symphony.videocoin.net/api/v1/delegations
+        - REACT_APP_DELEGATIONS_API_URL=https://symphony.videocoin.network/api/v1/delegations
         - REACT_APP_NETWORKS=1
         - REACT_APP_TOKEN_ADDRESS=0x2c9023bbc572ff8dc1228c7858a280046ea8c9e5
         - REACT_APP_ESCROW_ADDRESS=0x314847cf2f4911c73e9e86005bdd901520c522b9
